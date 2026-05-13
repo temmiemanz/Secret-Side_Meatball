@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meatball — Character Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --font-title: 'Bebas Neue', sans-serif;
+  --font-body:  'Crimson Pro', serif;
+  --font-mono:  'Share Tech Mono', monospace;
+  --void:    #06080a;
+  --bg:      #0a0c0f;
+  --bg-card: rgba(10,12,15,.84);
+  --bg-tint: rgba(14,17,22,.78);
+  --crimson: #c0392b;
+  --crimson2:#922b21;
+  --crimson3:#641e16;
+  --ember:   #e74c3c;
+  --purple:  #6c3483;
+  --purple2: #4a235a;
+  --plum:    #8e44ad;
+  --vine:    #2e4a1a;
+  --moss:    #3d6128;
+  --leaf:    #4e7a30;
+  --concrete:#3a3a3a;
+  --dust:    #8a8078;
+  --chalk:   #b8b0a8;
+  --text:    #e8e0d8;
+  --text-mid:#9a9080;
+  --text-dim:#4a4440;
+  --border:  rgba(192,57,43,.15);
+  --border2: rgba(192,57,43,.28);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{
+  background:var(--void);
+  font-family:var(--font-body);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding:0;
+  overflow-x:hidden;
+  position:relative;
+}
+.scene{position:fixed;inset:0;z-index:0;overflow:hidden}
+.sky{
+  position:absolute;inset:0;
+  background:linear-gradient(175deg,#0a0408 0%,#1a0810 18%,#2d0d18 30%,#1e0c22 48%,#0d0c14 65%,#080c0f 80%,#060a0c 100%);
+}
+.sky-glow{
+  position:absolute;bottom:35%;left:50%;transform:translateX(-50%);
+  width:70%;height:300px;
+  background:radial-gradient(ellipse,rgba(180,40,30,.18) 0%,rgba(120,20,60,.1) 35%,transparent 70%);
+  filter:blur(40px);
+}
+.city-svg{position:absolute;bottom:28%;left:0;right:0;height:260px;width:100%}
+.ground-fog{
+  position:absolute;bottom:0;left:0;right:0;height:35%;
+  background:linear-gradient(0deg,rgba(4,6,8,.95) 0%,rgba(4,6,8,.7) 40%,rgba(4,6,8,.2) 75%,transparent 100%);
+}
+.wall-svg{position:absolute;inset:0;width:100%;height:100%}
+.content-wrap{
+  position:relative;z-index:10;
+  width:100%;max-width:700px;
+  padding:clamp(2rem,6vw,4rem) clamp(1rem,4vw,2rem);
+  display:flex;flex-direction:column;gap:.75rem;
+}
+.card{
+  background:var(--bg-card);
+  backdrop-filter:blur(12px) saturate(1.4);
+  -webkit-backdrop-filter:blur(12px) saturate(1.4);
+  border:1px solid var(--border2);
+  padding:clamp(1rem,3vw,1.4rem) clamp(1.1rem,4vw,1.7rem);
+  position:relative;overflow:hidden;
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--crimson3),var(--crimson) 30%,var(--ember) 55%,var(--purple) 78%,var(--crimson2));
+  box-shadow:0 0 10px rgba(192,57,43,.35);
+}
+.sec-label{
+  font-family:var(--font-mono);
+  font-size:clamp(.55rem,1.5vw,.62rem);
+  letter-spacing:.2em;color:var(--crimson);
+  text-transform:uppercase;margin-bottom:clamp(.6rem,2vw,.9rem);opacity:.8;
+}
+.header-card{
+  background:linear-gradient(135deg,rgba(12,6,10,.92) 0%,rgba(16,8,14,.88) 50%,rgba(10,10,16,.9) 100%);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(192,57,43,.38);
+  padding:clamp(1.2rem,4vw,1.8rem) clamp(1.1rem,4vw,1.7rem);
+  position:relative;overflow:hidden;
+  clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+}
+.header-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--crimson3) 0%,var(--crimson) 25%,var(--ember) 50%,var(--plum) 75%,var(--crimson2) 100%);
+  box-shadow:0 0 16px rgba(192,57,43,.5),0 0 32px rgba(192,57,43,.2);
+}
+.header-smear{
+  position:absolute;right:0;top:0;bottom:0;width:220px;
+  background:radial-gradient(ellipse at 80% 40%,rgba(180,40,30,.12) 0%,rgba(108,52,131,.08) 40%,transparent 70%);
+  pointer-events:none;
+}
+.char-nickname{
+  font-family:var(--font-mono);font-size:clamp(.62rem,1.8vw,.72rem);
+  color:var(--crimson);letter-spacing:.18em;text-transform:uppercase;margin-bottom:.4rem;opacity:.85;
+}
+.char-name{
+  font-family:var(--font-title);font-size:clamp(2.2rem,7vw,3.5rem);
+  color:var(--text);letter-spacing:.06em;line-height:.95;
+  text-shadow:0 0 30px rgba(192,57,43,.4),0 2px 0 rgba(0,0,0,.8);
+}
+.char-meta{font-family:var(--font-body);font-size:clamp(.7rem,2vw,.8rem);color:var(--text-mid);margin-top:.25rem;font-style:italic;}
+.char-meta.tag{font-style:normal;font-family:var(--font-mono);font-size:clamp(.56rem,1.5vw,.62rem);letter-spacing:.1em;color:var(--text-dim);text-transform:uppercase;margin-top:.1rem;}
+.badge-row{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;}
+.badge{text-align:right;flex-shrink:0;}
+.badge-label{font-family:var(--font-mono);font-size:clamp(.5rem,1.4vw,.56rem);color:var(--text-dim);text-transform:uppercase;letter-spacing:.14em;}
+.badge-value{
+  font-family:var(--font-title);font-size:clamp(2.5rem,7vw,3.8rem);
+  color:var(--crimson);line-height:.9;margin-top:.1rem;
+  text-shadow:0 0 16px rgba(192,57,43,.7),0 0 40px rgba(192,57,43,.25);
+}
+.evo-track{
+  display:flex;align-items:center;gap:0;flex-wrap:wrap;
+  margin-top:.75rem;padding:.5rem .75rem;
+  background:rgba(0,0,0,.4);border:1px solid rgba(192,57,43,.12);
+  clip-path:polygon(0 0,100% 0,calc(100% - 6px) 100%,6px 100%);
+}
+.evo-step{font-family:var(--font-mono);font-size:clamp(.5rem,1.4vw,.56rem);color:var(--text-dim);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;}
+.evo-step.current{color:var(--crimson);text-shadow:0 0 8px rgba(192,57,43,.5);}
+.evo-arrow{font-size:.55rem;color:var(--text-dim);margin:0 .4rem;opacity:.5;}
+.rolls-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.4rem,1.8vw,.6rem);}
+.roll-card{
+  background:var(--bg-tint);border:1px solid rgba(58,58,58,.5);
+  padding:.7rem .9rem;position:relative;overflow:hidden;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%);
+}
+.roll-card::before{content:'';position:absolute;top:0;left:0;width:2px;height:100%;}
+.roll-card:nth-child(1)::before{background:var(--crimson);box-shadow:0 0 6px rgba(192,57,43,.6);}
+.roll-card:nth-child(2)::before{background:var(--purple);box-shadow:0 0 6px rgba(108,52,131,.5);}
+.roll-card:nth-child(3)::before{background:var(--leaf);box-shadow:0 0 4px rgba(78,122,48,.4);}
+.roll-abbr{font-family:var(--font-mono);font-size:clamp(.52rem,1.5vw,.58rem);color:var(--text-dim);letter-spacing:.14em;text-transform:uppercase;}
+.roll-mod{font-family:var(--font-title);font-size:clamp(1.2rem,3.5vw,1.6rem);color:var(--text);letter-spacing:.04em;line-height:1.1;margin-top:.1rem;}
+.roll-note{font-size:clamp(.58rem,1.6vw,.65rem);color:var(--text-mid);font-style:italic;line-height:1.4;margin-top:.1rem;}
+.abilities-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(.5rem,2vw,.7rem);}
+.ability{
+  background:var(--bg-tint);border:1px solid rgba(58,58,58,.45);
+  padding:.85rem 1rem;display:flex;flex-direction:column;gap:.4rem;
+  position:relative;overflow:hidden;
+}
+.ability.full{grid-column:1/-1;}
+.ability::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--crimson2) 30%,var(--crimson) 50%,var(--crimson2) 70%,transparent);opacity:.5;
+}
+.ability-header{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+.ability-tag{
+  font-family:var(--font-mono);font-size:clamp(.46rem,1.3vw,.52rem);
+  color:var(--text);background:var(--crimson3);border:1px solid var(--crimson2);
+  padding:2px 7px;text-transform:uppercase;letter-spacing:.1em;flex-shrink:0;
+  clip-path:polygon(0 0,100% 0,calc(100% - 4px) 100%,4px 100%);
+  box-shadow:0 0 6px rgba(192,57,43,.3);
+}
+.ability-tag.evo{background:var(--purple2);border-color:var(--purple);box-shadow:0 0 6px rgba(108,52,131,.3);}
+.ability-name{font-family:var(--font-title);font-size:clamp(1rem,2.8vw,1.2rem);color:var(--text);letter-spacing:.05em;}
+.ability-desc{font-size:clamp(.63rem,1.8vw,.71rem);color:var(--text-mid);line-height:1.65;font-style:italic;}
+.limits-label{font-family:var(--font-mono);font-size:clamp(.48rem,1.3vw,.54rem);letter-spacing:.16em;color:var(--dust);text-transform:uppercase;margin-top:.3rem;}
+.limit-item{display:flex;gap:.4rem;align-items:flex-start;margin-top:.3rem;}
+.limit-dot{width:4px;height:4px;background:var(--concrete);margin-top:5px;flex-shrink:0;transform:rotate(45deg);}
+.limit-text{font-size:clamp(.6rem,1.7vw,.66rem);color:var(--text-mid);line-height:1.5;font-style:italic;}
+.limit-text b{color:var(--text);font-style:normal;}
+.lore-block{display:flex;flex-direction:column;gap:.7rem;}
+.lore-text{font-size:clamp(.68rem,2vw,.77rem);color:var(--text-mid);line-height:1.8;}
+.lore-text+.lore-text{padding-top:.7rem;border-top:1px solid rgba(192,57,43,.08);}
+.lore-text em{color:var(--crimson);font-style:italic;}
+.lore-text strong{color:var(--text);font-style:normal;}
+.footer{
+  text-align:center;font-family:var(--font-mono);
+  font-size:clamp(.48rem,1.4vw,.55rem);color:var(--text-dim);
+  letter-spacing:.14em;text-transform:uppercase;padding:.4rem 0 .2rem;
+}
+.footer span{
+  display:inline-block;width:3px;height:3px;background:var(--crimson2);
+  transform:rotate(45deg);vertical-align:middle;margin:0 .5rem .05rem;
+  box-shadow:0 0 4px rgba(192,57,43,.5);
+}
+@media(max-width:520px){
+  .rolls-grid{grid-template-columns:1fr 1fr;}
+  .abilities-grid{grid-template-columns:1fr;}
+  .ability.full{grid-column:1;}
+  .evo-track{flex-direction:column;gap:.1rem;}
+  .evo-arrow{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="sky"></div>
+  <div class="sky-glow"></div>
+
+  <!-- city skyline SVG -->
+  <svg class="city-svg" viewBox="0 0 1400 280" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#2d0d18" stop-opacity=".5"/>
+        <stop offset="100%" stop-color="#0a0c10" stop-opacity=".9"/>
+      </linearGradient>
+    </defs>
+    <rect width="1400" height="280" fill="url(#cg)"/>
+    <rect x="30"   y="120" width="45"  height="160" fill="#151018" opacity=".9"/>
+    <rect x="75"   y="160" width="30"  height="120" fill="#121018" opacity=".8"/>
+    <rect x="105"  y="90"  width="55"  height="190" fill="#161015" opacity=".95"/>
+    <rect x="160"  y="140" width="40"  height="140" fill="#130e14" opacity=".85"/>
+    <rect x="200"  y="70"  width="70"  height="210" fill="#181215" opacity=".95"/>
+    <rect x="228"  y="30"  width="3"   height="40"  fill="#201418" opacity=".7"/>
+    <rect x="250"  y="100" width="40"  height="180" fill="#141015" opacity=".8"/>
+    <rect x="290"  y="130" width="50"  height="150" fill="#151015" opacity=".85"/>
+    <rect x="340"  y="55"  width="80"  height="225" fill="#1a1218" opacity=".95"/>
+    <rect x="420"  y="110" width="35"  height="170" fill="#120e12" opacity=".8"/>
+    <rect x="455"  y="80"  width="60"  height="200" fill="#161215" opacity=".9"/>
+    <rect x="515"  y="140" width="45"  height="140" fill="#131015" opacity=".75"/>
+    <rect x="560"  y="60"  width="90"  height="220" fill="#1c1218" opacity=".95"/>
+    <rect x="592"  y="45"  width="22"  height="15"  fill="#181015" opacity=".7"/>
+    <rect x="650"  y="100" width="55"  height="180" fill="#141215" opacity=".85"/>
+    <rect x="705"  y="130" width="40"  height="150" fill="#131015" opacity=".8"/>
+    <rect x="745"  y="75"  width="70"  height="205" fill="#181218" opacity=".9"/>
+    <rect x="815"  y="115" width="50"  height="165" fill="#141015" opacity=".85"/>
+    <rect x="865"  y="50"  width="85"  height="230" fill="#1c1216" opacity=".95"/>
+    <rect x="950"  y="130" width="40"  height="150" fill="#131015" opacity=".75"/>
+    <rect x="990"  y="85"  width="65"  height="195" fill="#161215" opacity=".9"/>
+    <rect x="1055" y="145" width="45"  height="135" fill="#141018" opacity=".8"/>
+    <rect x="1100" y="65"  width="75"  height="215" fill="#1a1218" opacity=".95"/>
+    <rect x="1175" y="120" width="50"  height="160" fill="#141215" opacity=".85"/>
+    <rect x="1225" y="90"  width="60"  height="190" fill="#161018" opacity=".9"/>
+    <rect x="1285" y="135" width="45"  height="145" fill="#131015" opacity=".8"/>
+    <rect x="1330" y="70"  width="70"  height="210" fill="#181215" opacity=".9"/>
+    <!-- window lights -->
+    <rect x="115" y="110" width="4" height="3" fill="#c87a30" opacity=".22"/>
+    <rect x="212" y="85"  width="5" height="3" fill="#d4943a" opacity=".2"/>
+    <rect x="355" y="75"  width="5" height="3" fill="#d4943a" opacity=".22"/>
+    <rect x="575" y="80"  width="5" height="3" fill="#d4943a" opacity=".2"/>
+    <rect x="875" y="68"  width="5" height="3" fill="#d4943a" opacity=".22"/>
+    <rect x="1110" y="82" width="5" height="3" fill="#d4943a" opacity=".2"/>
+    <!-- vines on buildings -->
+    <path d="M200,280 Q195,240 202,200 Q208,168 198,130 Q192,105 200,70" fill="none" stroke="#2e4a1a" stroke-width="3" opacity=".55" stroke-linecap="round"/>
+    <ellipse cx="197" cy="198" rx="9" ry="5" fill="#2e4a1a" opacity=".5" transform="rotate(-22 197 198)"/>
+    <ellipse cx="199" cy="240" rx="11" ry="5.5" fill="#3d6128" opacity=".45" transform="rotate(12 199 240)"/>
+    <path d="M560,280 Q558,245 565,210 Q572,180 560,148" fill="none" stroke="#2e4a1a" stroke-width="3" opacity=".5" stroke-linecap="round"/>
+    <ellipse cx="562" cy="208" rx="10" ry="5" fill="#3d6128" opacity=".45" transform="rotate(18 562 208)"/>
+    <path d="M865,280 Q862,242 870,205 Q877,172 864,135 Q857,108 865,72" fill="none" stroke="#2e4a1a" stroke-width="3" opacity=".55" stroke-linecap="round"/>
+    <ellipse cx="866" cy="202" rx="11" ry="5.5" fill="#2e4a1a" opacity=".5" transform="rotate(-14 866 202)"/>
+    <path d="M1100,280 Q1098,248 1107,215 Q1114,188 1102,158" fill="none" stroke="#3d6128" stroke-width="2.5" opacity=".45" stroke-linecap="round"/>
+    <ellipse cx="1104" cy="212" rx="9" ry="4.5" fill="#2e4a1a" opacity=".42" transform="rotate(22 1104 212)"/>
+    <!-- street growth from bottom -->
+    <path d="M0,280 Q50,255 80,235 Q110,215 90,185 Q74,160 100,140" fill="none" stroke="#2e4a1a" stroke-width="4" opacity=".45" stroke-linecap="round"/>
+    <ellipse cx="91" cy="183" rx="12" ry="6" fill="#2e4a1a" opacity=".45" transform="rotate(-28 91 183)"/>
+    <path d="M700,280 Q730,262 748,242 Q765,224 751,200" fill="none" stroke="#3d6128" stroke-width="3" opacity=".4" stroke-linecap="round"/>
+    <ellipse cx="749" cy="240" rx="10" ry="5" fill="#2e4a1a" opacity=".4" transform="rotate(-16 749 240)"/>
+    <path d="M1350,280 Q1372,260 1388,242 Q1400,225 1390,202" fill="none" stroke="#2e4a1a" stroke-width="3" opacity=".38" stroke-linecap="round"/>
+  </svg>
+
+  <div class="ground-fog"></div>
+
+  <!-- broken wall overlay -->
+  <svg class="wall-svg" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="wL" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#0c0c0a" stop-opacity="1"/><stop offset="100%" stop-color="#0c0c0a" stop-opacity="0"/></linearGradient>
+      <linearGradient id="wR" x1="1" y1="0" x2="0" y2="0"><stop offset="0%" stop-color="#0a0a0c" stop-opacity="1"/><stop offset="100%" stop-color="#0a0a0c" stop-opacity="0"/></linearGradient>
+      <linearGradient id="wT" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#080a0c" stop-opacity="1"/><stop offset="100%" stop-color="#080a0c" stop-opacity="0"/></linearGradient>
+      <linearGradient id="wB" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#040608" stop-opacity="1"/><stop offset="100%" stop-color="#040608" stop-opacity="0"/></linearGradient>
+    </defs>
+    <!-- edge vignette -->
+    <rect x="0"    y="0"   width="200" height="900" fill="url(#wL)"/>
+    <rect x="1200" y="0"   width="200" height="900" fill="url(#wR)"/>
+    <rect x="0"    y="0"   width="1400" height="130" fill="url(#wT)"/>
+    <rect x="0"    y="770" width="1400" height="130" fill="url(#wB)"/>
+    <!-- left broken wall chunk -->
+    <polygon points="0,0 250,0 210,65 178,42 145,88 112,52 78,95 48,62 0,85" fill="#1a1816" opacity=".96"/>
+    <polygon points="0,0 0,220 42,195 32,148 64,125 48,82 78,95 48,62 0,85" fill="#181614" opacity=".92"/>
+    <!-- cracks -->
+    <path d="M210,65 L194,128 L206,192 L184,255" fill="none" stroke="#080808" stroke-width="2.5" opacity=".85"/>
+    <path d="M145,88 L134,148 L152,200" fill="none" stroke="#0a0a0a" stroke-width="1.8" opacity=".75"/>
+    <!-- rebar -->
+    <line x1="172" y1="44" x2="164" y2="160" stroke="#3a3530" stroke-width="2.5" opacity=".75"/>
+    <line x1="156" y1="58" x2="149" y2="148" stroke="#3a3530" stroke-width="1.8" opacity=".65"/>
+    <!-- vine through crack -->
+    <path d="M158,88 Q150,128 158,162 Q165,188 153,225" fill="none" stroke="#2e4a1a" stroke-width="2.8" opacity=".75" stroke-linecap="round"/>
+    <path d="M158,162 Q146,158 140,148" fill="none" stroke="#3d6128" stroke-width="1.5" opacity=".6" stroke-linecap="round"/>
+    <ellipse cx="155" cy="160" rx="8" ry="4.5" fill="#2e4a1a" opacity=".72" transform="rotate(-22 155 160)"/>
+    <ellipse cx="152" cy="198" rx="9" ry="5" fill="#3d6128" opacity=".65" transform="rotate(16 152 198)"/>
+    <ellipse cx="152" cy="222" rx="7" ry="4" fill="#2e4a1a" opacity=".55" transform="rotate(-8 152 222)"/>
+    <!-- concrete particles -->
+    <circle cx="198" cy="78" r="2.5" fill="#3a3530" opacity=".55"/>
+    <circle cx="182" cy="98" r="1.8" fill="#3a3530" opacity=".45"/>
+    <circle cx="215" cy="58" r="1.2" fill="#3a3530" opacity=".38"/>
+    <circle cx="168" cy="112" r="2" fill="#2e2c2a" opacity=".5"/>
+    <!-- right broken wall chunk -->
+    <polygon points="1400,0 1148,0 1192,58 1224,36 1258,75 1292,50 1325,88 1358,64 1400,78" fill="#181816" opacity=".96"/>
+    <polygon points="1400,0 1400,210 1358,182 1370,142 1338,120 1356,80 1325,88 1358,64 1400,78" fill="#161614" opacity=".92"/>
+    <path d="M1192,58 L1208,120 L1196,182 L1215,242" fill="none" stroke="#0a0a0a" stroke-width="2.5" opacity=".85"/>
+    <line x1="1228" y1="38" x2="1238" y2="152" stroke="#3a3530" stroke-width="2.5" opacity=".75"/>
+    <line x1="1244" y1="52" x2="1252" y2="140" stroke="#3a3530" stroke-width="1.8" opacity=".65"/>
+    <path d="M1242,72 Q1250,118 1244,155 Q1238,182 1250,218" fill="none" stroke="#2e4a1a" stroke-width="2.8" opacity=".7" stroke-linecap="round"/>
+    <ellipse cx="1245" cy="153" rx="8" ry="4.5" fill="#2e4a1a" opacity=".68" transform="rotate(24 1245 153)"/>
+    <ellipse cx="1248" cy="196" rx="9" ry="5" fill="#3d6128" opacity=".62" transform="rotate(-14 1248 196)"/>
+    <circle cx="1200" cy="72" r="2.5" fill="#3a3530" opacity=".55"/>
+    <circle cx="1218" cy="95" r="1.8" fill="#3a3530" opacity=".45"/>
+    <!-- top ceiling chunk -->
+    <polygon points="380,0 640,0 608,54 576,32 542,68 508,42 474,72 442,40 410,62" fill="#161614" opacity=".92"/>
+    <path d="M608,54 L594,124 L608,178" fill="none" stroke="#0a0a0a" stroke-width="1.8" opacity=".75"/>
+    <!-- hanging vines from ceiling cracks -->
+    <path d="M542,68 Q548,105 540,138 Q532,168 542,198" fill="none" stroke="#2e4a1a" stroke-width="2.2" opacity=".65" stroke-linecap="round"/>
+    <ellipse cx="540" cy="136" rx="7" ry="4" fill="#2e4a1a" opacity=".6" transform="rotate(-12 540 136)"/>
+    <path d="M1060,0 Q1056,45 1064,78 Q1072,105 1060,138" fill="none" stroke="#3d6128" stroke-width="2" opacity=".55" stroke-linecap="round"/>
+    <ellipse cx="1062" cy="76" rx="6" ry="3.5" fill="#2e4a1a" opacity=".55" transform="rotate(18 1062 76)"/>
+    <ellipse cx="1060" cy="115" rx="7" ry="4" fill="#3d6128" opacity=".48" transform="rotate(-8 1060 115)"/>
+    <!-- floor rubble bottom -->
+    <polygon points="0,900 0,792 58,815 88,782 128,824 168,795 200,835 232,802 264,842 288,820 312,900" fill="#181614" opacity=".96"/>
+    <polygon points="1400,900 1400,798 1340,820 1308,788 1268,826 1238,798 1208,838 1182,808 1158,845 1136,822 1112,900" fill="#161614" opacity=".96"/>
+    <path d="M58,815 Q52,855 60,886" fill="none" stroke="#2e4a1a" stroke-width="2.2" opacity=".65" stroke-linecap="round"/>
+    <ellipse cx="59" cy="852" rx="7" ry="4" fill="#2e4a1a" opacity=".6" transform="rotate(10 59 852)"/>
+    <path d="M200,835 Q194,868 202,896" fill="none" stroke="#3d6128" stroke-width="1.8" opacity=".55" stroke-linecap="round"/>
+    <ellipse cx="201" cy="866" rx="6" ry="3.5" fill="#3d6128" opacity=".5" transform="rotate(-6 201 866)"/>
+  </svg>
+</div>
+
+<div class="content-wrap">
+  <div class="header-card">
+    <div class="header-smear"></div>
+    <div class="badge-row">
+      <div>
+        <div class="char-nickname">// Johnny Wellman //</div>
+        <div class="char-name">Meatball</div>
+        <div class="char-meta">DM Character &nbsp;·&nbsp; Archivist Network — Wanted</div>
+        <div class="char-meta tag">Embodiment EGG — Cellular Manipulation</div>
+        <div class="evo-track">
+          <span class="evo-step">Minor Regen</span><span class="evo-arrow">→</span>
+          <span class="evo-step">Regeneration</span><span class="evo-arrow">→</span>
+          <span class="evo-step">Morphing</span><span class="evo-arrow">→</span>
+          <span class="evo-step">Cell Manip.</span><span class="evo-arrow">→</span>
+          <span class="evo-step current">Cellular Manip.</span>
+        </div>
+      </div>
+      <div class="badge">
+        <div class="badge-label">Level</div>
+        <div class="badge-value">??</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec-label">// rolls</div>
+    <div class="rolls-grid">
+      <div class="roll-card">
+        <div class="roll-abbr">STR</div>
+        <div class="roll-mod">d20 + 6</div>
+        <div class="roll-note">physical attacks and actions</div>
+      </div>
+      <div class="roll-card">
+        <div class="roll-abbr">MND</div>
+        <div class="roll-mod">d20 + 4</div>
+        <div class="roll-note">intellectual and mental actions</div>
+      </div>
+      <div class="roll-card">
+        <div class="roll-abbr">SOL</div>
+        <div class="roll-mod">d20 + 3</div>
+        <div class="roll-note">belief, instinct, willpower</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec-label">// abilities</div>
+    <div class="abilities-grid">
+      <div class="ability">
+        <div class="ability-header">
+          <span class="ability-tag">active</span>
+          <span class="ability-name">Cellular Control</span>
+        </div>
+        <div class="ability-desc">Absolute command over every cell — shapeshifting, self-repair, aging, and voluntary cell death all at will. Applies to his own cells and any cells he is touching.</div>
+      </div>
+      <div class="ability">
+        <div class="ability-header">
+          <span class="ability-tag evo">evolution</span>
+          <span class="ability-name">Physiological Alteration</span>
+        </div>
+        <div class="ability-desc">Can grow new limbs, organs, or restructure his biology entirely — given enough time.</div>
+        <div class="limits-label">limit</div>
+        <div class="limit-item"><div class="limit-dot"></div><div class="limit-text">Major physiological changes take significant time.</div></div>
+      </div>
+      <div class="ability full">
+        <div class="ability-header">
+          <span class="ability-tag">active</span>
+          <span class="ability-name">Absorption</span>
+        </div>
+        <div class="ability-desc">Fully engulf a target to gradually convert their cells into his own. Converted mass adds to his body or stores as energy.</div>
+        <div class="limits-label">limit</div>
+        <div class="limit-item"><div class="limit-dot"></div><div class="limit-text">Requires complete engulfment — partial contact does nothing.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec-label">// lore</div>
+    <div class="lore-block">
+      <div class="lore-text">In 1985, a year into the world falling apart, Johnny Wellman found someone else trying to hold it together. They called themselves a hero team — just two of them. Johnny went by <em>Meatball</em>, his arms at the time reshaping into something that looked exactly like what the name implied, and he could heal others with them. His partner went by <em>The Crimson Fist</em> — or just Crim. He'd made the coat himself: dark black jumpsuit, crimson with black lining. They were best friends. They made it work.</div>
+      <div class="lore-text">A year in, someone tore Crim in half on top of him. Johnny suffocated the man with his morphing arms before the rage had time to become a thought. He buried Crim. He kept the coat. <strong>He wears it on his shoulders now, every day, because some things you don't take off.</strong></div>
+      <div class="lore-text">By the 2000s he's working with the Archivist Network — cataloguing, researching, moving through the world quietly in a suit he loves more than almost anything. In conversation with coworkers one day he mentions he's been tracing the source of the awakening. <em>They turn on him instantly.</em> He doesn't know why. He's still trying to figure it out, which means he's a wanted man chasing an answer he isn't even sure exists yet.</div>
+      <div class="lore-text">He can look like anyone at any time. He keeps the black hair long, the beard a few days past stubble, the suit always on, the crimson coat always over his shoulders. He smokes. Crimson, purple, and black — that's his world. It has been since 1986.</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    dm character<span></span>post-collapse 2004<span></span>embodiment egg
+  </div>
+</div>
+</body>
+</html>
