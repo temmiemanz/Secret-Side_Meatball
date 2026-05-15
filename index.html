@@ -3,355 +3,949 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meatball — Character Sheet</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<title>Meatball — DM Character Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 :root {
-  --font-title: 'Bebas Neue', sans-serif;
-  --font-body:  'Crimson Pro', serif;
-  --font-mono:  'Share Tech Mono', monospace;
-  --void:    #06080a;
-  --bg:      #0a0c0f;
-  --bg-card: rgba(10,12,15,.84);
-  --bg-tint: rgba(14,17,22,.78);
+  --title:   'Bebas Neue', sans-serif;
+  --body:    'Crimson Pro', serif;
+  --mono:    'Share Tech Mono', monospace;
+
+  --void:    #03020a;
+  --bg:      #07060f;
+  --glass:   rgba(8,5,18,.78);
+  --glass2:  rgba(12,8,22,.85);
+  --tint:    rgba(14,10,24,.72);
+
   --crimson: #c0392b;
-  --crimson2:#922b21;
-  --crimson3:#641e16;
   --ember:   #e74c3c;
-  --purple:  #6c3483;
-  --purple2: #4a235a;
+  --blood:   #7b1a14;
+  --rust:    #922b21;
   --plum:    #8e44ad;
-  --vine:    #2e4a1a;
-  --moss:    #3d6128;
+  --purple:  #6c3483;
+  --violet:  #4a235a;
+  --grape:   #2d1240;
+  --vine:    #1e3610;
+  --moss:    #2e4a1a;
+  --fern:    #3d6128;
   --leaf:    #4e7a30;
-  --concrete:#3a3a3a;
-  --dust:    #8a8078;
-  --chalk:   #b8b0a8;
-  --text:    #e8e0d8;
-  --text-mid:#9a9080;
-  --text-dim:#4a4440;
-  --border:  rgba(192,57,43,.15);
-  --border2: rgba(192,57,43,.28);
+  --concrete:#2e2c2a;
+  --dust:    #6a6058;
+  --chalk:   #a89888;
+
+  --text:    #ece0d4;
+  --mid:     #8a7868;
+  --dim:     #3a3028;
+
+  --b1: rgba(192,57,43,.18);
+  --b2: rgba(192,57,43,.32);
+  --bp: rgba(108,52,131,.22);
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{min-height:100%}
-body{
-  background:var(--void);
-  font-family:var(--font-body);
-  color:var(--text);
-  min-height:100vh;
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
-  padding:0;
-  overflow-x:hidden;
-  position:relative;
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { min-height: 100%; }
+
+body {
+  background: var(--void);
+  font-family: var(--body);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
 }
-.scene{position:fixed;inset:0;z-index:0;overflow:hidden}
-.sky{
-  position:absolute;inset:0;
-  background:linear-gradient(175deg,#0a0408 0%,#1a0810 18%,#2d0d18 30%,#1e0c22 48%,#0d0c14 65%,#080c0f 80%,#060a0c 100%);
+
+/* ═══════════════════════════════════════
+   SCENE — full screen immersive backdrop
+   ═══════════════════════════════════════ */
+#scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
 }
-.sky-glow{
-  position:absolute;bottom:35%;left:50%;transform:translateX(-50%);
-  width:70%;height:300px;
-  background:radial-gradient(ellipse,rgba(180,40,30,.18) 0%,rgba(120,20,60,.1) 35%,transparent 70%);
-  filter:blur(40px);
+
+/* Sky gradient — deep dusk blood sky */
+#sky {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 55% at 38% 30%, rgba(140,20,30,.28) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 70% 45%, rgba(80,15,100,.18) 0%, transparent 55%),
+    linear-gradient(175deg,
+      #080208 0%,
+      #150812 10%,
+      #2a0c1a 22%,
+      #1e0c28 36%,
+      #120d1e 52%,
+      #0a0c14 68%,
+      #060a0e 82%,
+      #040608 100%
+    );
 }
-.city-svg{position:absolute;bottom:28%;left:0;right:0;height:260px;width:100%}
-.ground-fog{
-  position:absolute;bottom:0;left:0;right:0;height:35%;
-  background:linear-gradient(0deg,rgba(4,6,8,.95) 0%,rgba(4,6,8,.7) 40%,rgba(4,6,8,.2) 75%,transparent 100%);
+
+/* Distant glow — like a fire far away or just the dying sun */
+#horizon-glow {
+  position: absolute;
+  bottom: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 280px;
+  background: radial-gradient(ellipse at center,
+    rgba(160,35,25,.22) 0%,
+    rgba(100,18,70,.12) 35%,
+    transparent 70%
+  );
+  filter: blur(50px);
 }
-.wall-svg{position:absolute;inset:0;width:100%;height:100%}
-.content-wrap{
-  position:relative;z-index:10;
-  width:100%;max-width:700px;
-  padding:clamp(2rem,6vw,4rem) clamp(1rem,4vw,2rem);
-  display:flex;flex-direction:column;gap:.75rem;
+
+/* Particle canvas — floating ash/embers */
+#particle-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
-.card{
-  background:var(--bg-card);
-  backdrop-filter:blur(12px) saturate(1.4);
-  -webkit-backdrop-filter:blur(12px) saturate(1.4);
-  border:1px solid var(--border2);
-  padding:clamp(1rem,3vw,1.4rem) clamp(1.1rem,4vw,1.7rem);
-  position:relative;overflow:hidden;
-  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+
+/* City SVG — overgrown ruins */
+#city {
+  position: absolute;
+  bottom: 18%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 340px;
 }
-.card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--crimson3),var(--crimson) 30%,var(--ember) 55%,var(--purple) 78%,var(--crimson2));
-  box-shadow:0 0 10px rgba(192,57,43,.35);
+
+/* Ground fog */
+#fog {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  background: linear-gradient(0deg,
+    rgba(3,2,10,.98) 0%,
+    rgba(4,3,12,.85) 35%,
+    rgba(5,4,14,.5) 60%,
+    transparent 100%
+  );
 }
-.sec-label{
-  font-family:var(--font-mono);
-  font-size:clamp(.55rem,1.5vw,.62rem);
-  letter-spacing:.2em;color:var(--crimson);
-  text-transform:uppercase;margin-bottom:clamp(.6rem,2vw,.9rem);opacity:.8;
+
+/* Wall frame — broken concrete looking OUT */
+#wall {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
-.header-card{
-  background:linear-gradient(135deg,rgba(12,6,10,.92) 0%,rgba(16,8,14,.88) 50%,rgba(10,10,16,.9) 100%);
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  border:1px solid rgba(192,57,43,.38);
-  padding:clamp(1.2rem,4vw,1.8rem) clamp(1.1rem,4vw,1.7rem);
-  position:relative;overflow:hidden;
-  clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+
+/* ═══════════════════════════════════════
+   CONTENT
+   ═══════════════════════════════════════ */
+.wrap {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: clamp(2.5rem,7vw,5rem) clamp(1rem,4vw,2rem) clamp(2rem,5vw,3rem);
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
 }
-.header-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--crimson3) 0%,var(--crimson) 25%,var(--ember) 50%,var(--plum) 75%,var(--crimson2) 100%);
-  box-shadow:0 0 16px rgba(192,57,43,.5),0 0 32px rgba(192,57,43,.2);
+
+/* ── glass card ── */
+.card {
+  background: var(--glass);
+  backdrop-filter: blur(14px) saturate(1.5);
+  -webkit-backdrop-filter: blur(14px) saturate(1.5);
+  border: 1px solid var(--b2);
+  padding: clamp(1rem,3vw,1.45rem) clamp(1.1rem,4vw,1.75rem);
+  position: relative;
+  overflow: hidden;
+  /* angular clip — top-right and bottom-left corners cut */
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
 }
-.header-smear{
-  position:absolute;right:0;top:0;bottom:0;width:220px;
-  background:radial-gradient(ellipse at 80% 40%,rgba(180,40,30,.12) 0%,rgba(108,52,131,.08) 40%,transparent 70%);
-  pointer-events:none;
+
+/* top edge glow */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--blood) 15%,
+    var(--crimson) 38%,
+    var(--ember) 52%,
+    var(--purple) 72%,
+    var(--violet) 88%,
+    transparent 100%
+  );
+  box-shadow: 0 0 12px rgba(192,57,43,.35);
 }
-.char-nickname{
-  font-family:var(--font-mono);font-size:clamp(.62rem,1.8vw,.72rem);
-  color:var(--crimson);letter-spacing:.18em;text-transform:uppercase;margin-bottom:.4rem;opacity:.85;
+
+/* grain overlay */
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+  background-size: 160px;
+  pointer-events: none;
+  mix-blend-mode: overlay;
 }
-.char-name{
-  font-family:var(--font-title);font-size:clamp(2.2rem,7vw,3.5rem);
-  color:var(--text);letter-spacing:.06em;line-height:.95;
-  text-shadow:0 0 30px rgba(192,57,43,.4),0 2px 0 rgba(0,0,0,.8);
+
+.sec-label {
+  font-family: var(--mono);
+  font-size: clamp(.5rem,1.4vw,.58rem);
+  letter-spacing: .22em;
+  color: var(--crimson);
+  text-transform: uppercase;
+  margin-bottom: clamp(.6rem,2vw,.9rem);
+  opacity: .85;
 }
-.char-meta{font-family:var(--font-body);font-size:clamp(.7rem,2vw,.8rem);color:var(--text-mid);margin-top:.25rem;font-style:italic;}
-.char-meta.tag{font-style:normal;font-family:var(--font-mono);font-size:clamp(.56rem,1.5vw,.62rem);letter-spacing:.1em;color:var(--text-dim);text-transform:uppercase;margin-top:.1rem;}
-.badge-row{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;}
-.badge{text-align:right;flex-shrink:0;}
-.badge-label{font-family:var(--font-mono);font-size:clamp(.5rem,1.4vw,.56rem);color:var(--text-dim);text-transform:uppercase;letter-spacing:.14em;}
-.badge-value{
-  font-family:var(--font-title);font-size:clamp(2.5rem,7vw,3.8rem);
-  color:var(--crimson);line-height:.9;margin-top:.1rem;
-  text-shadow:0 0 16px rgba(192,57,43,.7),0 0 40px rgba(192,57,43,.25);
+
+/* ── HEADER ── */
+.header-card {
+  background: linear-gradient(140deg,
+    rgba(15,6,12,.95) 0%,
+    rgba(20,8,18,.92) 40%,
+    rgba(12,8,24,.94) 70%,
+    rgba(8,8,18,.96) 100%
+  );
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(192,57,43,.42);
+  padding: clamp(1.3rem,4vw,2rem) clamp(1.1rem,4vw,1.75rem);
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
 }
-.evo-track{
-  display:flex;align-items:center;gap:0;flex-wrap:wrap;
-  margin-top:.75rem;padding:.5rem .75rem;
-  background:rgba(0,0,0,.4);border:1px solid rgba(192,57,43,.12);
-  clip-path:polygon(0 0,100% 0,calc(100% - 6px) 100%,6px 100%);
+
+/* top glow bar */
+.header-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    var(--blood) 0%,
+    var(--crimson) 20%,
+    var(--ember) 45%,
+    var(--plum) 65%,
+    var(--purple) 80%,
+    var(--violet) 100%
+  );
+  box-shadow: 0 0 20px rgba(192,57,43,.55), 0 0 40px rgba(192,57,43,.2);
 }
-.evo-step{font-family:var(--font-mono);font-size:clamp(.5rem,1.4vw,.56rem);color:var(--text-dim);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;}
-.evo-step.current{color:var(--crimson);text-shadow:0 0 8px rgba(192,57,43,.5);}
-.evo-arrow{font-size:.55rem;color:var(--text-dim);margin:0 .4rem;opacity:.5;}
-.rolls-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.4rem,1.8vw,.6rem);}
-.roll-card{
-  background:var(--bg-tint);border:1px solid rgba(58,58,58,.5);
-  padding:.7rem .9rem;position:relative;overflow:hidden;
-  clip-path:polygon(0 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%);
+
+/* inner atmosphere */
+.header-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 90% 20%, rgba(108,52,131,.1) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 10% 80%, rgba(192,57,43,.08) 0%, transparent 55%);
+  pointer-events: none;
 }
-.roll-card::before{content:'';position:absolute;top:0;left:0;width:2px;height:100%;}
-.roll-card:nth-child(1)::before{background:var(--crimson);box-shadow:0 0 6px rgba(192,57,43,.6);}
-.roll-card:nth-child(2)::before{background:var(--purple);box-shadow:0 0 6px rgba(108,52,131,.5);}
-.roll-card:nth-child(3)::before{background:var(--leaf);box-shadow:0 0 4px rgba(78,122,48,.4);}
-.roll-abbr{font-family:var(--font-mono);font-size:clamp(.52rem,1.5vw,.58rem);color:var(--text-dim);letter-spacing:.14em;text-transform:uppercase;}
-.roll-mod{font-family:var(--font-title);font-size:clamp(1.2rem,3.5vw,1.6rem);color:var(--text);letter-spacing:.04em;line-height:1.1;margin-top:.1rem;}
-.roll-note{font-size:clamp(.58rem,1.6vw,.65rem);color:var(--text-mid);font-style:italic;line-height:1.4;margin-top:.1rem;}
-.abilities-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(.5rem,2vw,.7rem);}
-.ability{
-  background:var(--bg-tint);border:1px solid rgba(58,58,58,.45);
-  padding:.85rem 1rem;display:flex;flex-direction:column;gap:.4rem;
-  position:relative;overflow:hidden;
+
+.header-inner { position: relative; z-index: 1; }
+
+.badge-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
 }
-.ability.full{grid-column:1/-1;}
-.ability::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--crimson2) 30%,var(--crimson) 50%,var(--crimson2) 70%,transparent);opacity:.5;
+
+.nickname {
+  font-family: var(--mono);
+  font-size: clamp(.55rem,1.5vw,.64rem);
+  color: var(--crimson);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  margin-bottom: .45rem;
+  opacity: .9;
 }
-.ability-header{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
-.ability-tag{
-  font-family:var(--font-mono);font-size:clamp(.46rem,1.3vw,.52rem);
-  color:var(--text);background:var(--crimson3);border:1px solid var(--crimson2);
-  padding:2px 7px;text-transform:uppercase;letter-spacing:.1em;flex-shrink:0;
-  clip-path:polygon(0 0,100% 0,calc(100% - 4px) 100%,4px 100%);
-  box-shadow:0 0 6px rgba(192,57,43,.3);
+
+.char-name {
+  font-family: var(--title);
+  font-size: clamp(2.5rem,8vw,4.2rem);
+  color: var(--text);
+  letter-spacing: .06em;
+  line-height: .9;
+  text-shadow:
+    0 0 35px rgba(192,57,43,.45),
+    0 0 70px rgba(192,57,43,.18),
+    0 2px 0 rgba(0,0,0,.9);
 }
-.ability-tag.evo{background:var(--purple2);border-color:var(--purple);box-shadow:0 0 6px rgba(108,52,131,.3);}
-.ability-name{font-family:var(--font-title);font-size:clamp(1rem,2.8vw,1.2rem);color:var(--text);letter-spacing:.05em;}
-.ability-desc{font-size:clamp(.63rem,1.8vw,.71rem);color:var(--text-mid);line-height:1.65;font-style:italic;}
-.limits-label{font-family:var(--font-mono);font-size:clamp(.48rem,1.3vw,.54rem);letter-spacing:.16em;color:var(--dust);text-transform:uppercase;margin-top:.3rem;}
-.limit-item{display:flex;gap:.4rem;align-items:flex-start;margin-top:.3rem;}
-.limit-dot{width:4px;height:4px;background:var(--concrete);margin-top:5px;flex-shrink:0;transform:rotate(45deg);}
-.limit-text{font-size:clamp(.6rem,1.7vw,.66rem);color:var(--text-mid);line-height:1.5;font-style:italic;}
-.limit-text b{color:var(--text);font-style:normal;}
-.lore-block{display:flex;flex-direction:column;gap:.7rem;}
-.lore-text{font-size:clamp(.68rem,2vw,.77rem);color:var(--text-mid);line-height:1.8;}
-.lore-text+.lore-text{padding-top:.7rem;border-top:1px solid rgba(192,57,43,.08);}
-.lore-text em{color:var(--crimson);font-style:italic;}
-.lore-text strong{color:var(--text);font-style:normal;}
-.footer{
-  text-align:center;font-family:var(--font-mono);
-  font-size:clamp(.48rem,1.4vw,.55rem);color:var(--text-dim);
-  letter-spacing:.14em;text-transform:uppercase;padding:.4rem 0 .2rem;
+
+.char-meta {
+  font-size: clamp(.68rem,2vw,.8rem);
+  color: var(--mid);
+  margin-top: .28rem;
+  font-style: italic;
 }
-.footer span{
-  display:inline-block;width:3px;height:3px;background:var(--crimson2);
-  transform:rotate(45deg);vertical-align:middle;margin:0 .5rem .05rem;
-  box-shadow:0 0 4px rgba(192,57,43,.5);
+.char-meta.tag {
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: clamp(.52rem,1.4vw,.6rem);
+  letter-spacing: .1em;
+  color: var(--dim);
+  text-transform: uppercase;
+  margin-top: .1rem;
 }
-@media(max-width:520px){
-  .rolls-grid{grid-template-columns:1fr 1fr;}
-  .abilities-grid{grid-template-columns:1fr;}
-  .ability.full{grid-column:1;}
-  .evo-track{flex-direction:column;gap:.1rem;}
-  .evo-arrow{display:none;}
+
+.badge { text-align: right; flex-shrink: 0; }
+.badge-label {
+  font-family: var(--mono);
+  font-size: clamp(.48rem,1.3vw,.56rem);
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: .14em;
+}
+.badge-value {
+  font-family: var(--title);
+  font-size: clamp(2.8rem,8vw,4.5rem);
+  color: var(--crimson);
+  line-height: .88;
+  margin-top: .08rem;
+  text-shadow:
+    0 0 18px rgba(192,57,43,.75),
+    0 0 45px rgba(192,57,43,.3);
+}
+
+/* DM badge */
+.dm-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  margin-top: .6rem;
+  font-family: var(--mono);
+  font-size: clamp(.5rem,1.4vw,.58rem);
+  color: var(--plum);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  border: 1px solid rgba(142,68,173,.35);
+  padding: .2rem .6rem;
+  clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px));
+  background: rgba(74,35,90,.15);
+}
+.dm-badge::before {
+  content: '◆';
+  font-size: .45rem;
+  color: var(--purple);
+}
+
+/* EVO track */
+.evo-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  margin-top: .8rem;
+  padding: .45rem .75rem;
+  background: rgba(0,0,0,.55);
+  border: 1px solid rgba(192,57,43,.12);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 7px) 100%, 7px 100%);
+  border-top: 1px solid rgba(192,57,43,.2);
+}
+.evo-step {
+  font-family: var(--mono);
+  font-size: clamp(.46rem,1.3vw,.54rem);
+  color: var(--dim);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.evo-step.done { color: rgba(192,57,43,.45); }
+.evo-step.current {
+  color: var(--ember);
+  text-shadow: 0 0 8px rgba(231,76,60,.5);
+  font-size: clamp(.5rem,1.4vw,.58rem);
+}
+.evo-arrow { font-size: .5rem; color: var(--dim); margin: 0 .38rem; opacity: .45; }
+
+/* ── ROLLS ── */
+.rolls-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: clamp(.4rem,1.8vw,.6rem);
+}
+.roll-card {
+  background: var(--tint);
+  border: 1px solid rgba(58,48,40,.6);
+  padding: .72rem .95rem;
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(0 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%);
+}
+.roll-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 2px; height: 100%;
+}
+.roll-card:nth-child(1)::before { background: var(--crimson); box-shadow: 0 0 7px rgba(192,57,43,.6); }
+.roll-card:nth-child(2)::before { background: var(--purple);  box-shadow: 0 0 7px rgba(108,52,131,.5); }
+.roll-card:nth-child(3)::before { background: var(--fern);    box-shadow: 0 0 5px rgba(61,97,40,.4); }
+
+.roll-abbr {
+  font-family: var(--mono);
+  font-size: clamp(.5rem,1.4vw,.58rem);
+  color: var(--dim);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.roll-mod {
+  font-family: var(--title);
+  font-size: clamp(1.3rem,3.8vw,1.8rem);
+  color: var(--text);
+  letter-spacing: .04em;
+  line-height: 1.05;
+  margin-top: .1rem;
+  text-shadow: 0 0 8px rgba(192,57,43,.2);
+}
+.roll-note {
+  font-size: clamp(.56rem,1.6vw,.63rem);
+  color: var(--mid);
+  font-style: italic;
+  line-height: 1.4;
+  margin-top: .1rem;
+}
+
+/* ── ABILITIES ── */
+.abilities-grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: clamp(.5rem,2vw,.7rem);
+}
+.ability {
+  background: var(--tint);
+  border: 1px solid rgba(58,48,40,.5);
+  padding: .88rem 1.05rem;
+  display: flex;
+  flex-direction: column;
+  gap: .42rem;
+  position: relative;
+  overflow: hidden;
+}
+.ability.full { grid-column: 1/-1; }
+
+/* left glow */
+.ability::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 1px; height: 100%;
+  background: linear-gradient(180deg,
+    var(--ember) 0%,
+    var(--crimson) 40%,
+    var(--purple) 75%,
+    transparent 100%
+  );
+  opacity: .4;
+}
+
+.ability-header { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+
+.ability-tag {
+  font-family: var(--mono);
+  font-size: clamp(.44rem,1.2vw,.5rem);
+  color: var(--text);
+  background: var(--blood);
+  border: 1px solid var(--rust);
+  padding: 2px 7px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  flex-shrink: 0;
+  clip-path: polygon(0 0,100% 0,calc(100% - 4px) 100%,4px 100%);
+  box-shadow: 0 0 6px rgba(192,57,43,.3);
+}
+.ability-tag.evo {
+  background: var(--violet);
+  border-color: var(--purple);
+  box-shadow: 0 0 6px rgba(108,52,131,.3);
+}
+
+.ability-name {
+  font-family: var(--title);
+  font-size: clamp(.95rem,2.8vw,1.18rem);
+  color: var(--text);
+  letter-spacing: .05em;
+}
+
+.ability-desc {
+  font-size: clamp(.62rem,1.8vw,.7rem);
+  color: var(--mid);
+  line-height: 1.65;
+  font-style: italic;
+}
+
+.limits-label {
+  font-family: var(--mono);
+  font-size: clamp(.46rem,1.3vw,.52rem);
+  letter-spacing: .18em;
+  color: var(--dust);
+  text-transform: uppercase;
+  margin-top: .28rem;
+}
+
+.limit-item {
+  display: flex;
+  gap: .4rem;
+  align-items: flex-start;
+  margin-top: .28rem;
+}
+.limit-dot {
+  width: 4px; height: 4px;
+  background: var(--concrete);
+  transform: rotate(45deg);
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.limit-text {
+  font-size: clamp(.58rem,1.6vw,.64rem);
+  color: var(--mid);
+  line-height: 1.5;
+  font-style: italic;
+}
+.limit-text b { color: var(--text); font-style: normal; }
+
+/* ── LORE ── */
+.lore-block { display: flex; flex-direction: column; gap: .72rem; }
+.lore-text {
+  font-size: clamp(.68rem,2vw,.78rem);
+  color: var(--mid);
+  line-height: 1.82;
+}
+.lore-text + .lore-text {
+  padding-top: .72rem;
+  border-top: 1px solid rgba(192,57,43,.07);
+}
+.lore-text em     { color: var(--crimson); font-style: italic; }
+.lore-text strong { color: var(--text); font-style: normal; }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: clamp(.46rem,1.3vw,.54rem);
+  color: var(--dim);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  padding: .45rem 0 .25rem;
+}
+.footer span {
+  display: inline-block;
+  width: 4px; height: 4px;
+  background: var(--rust);
+  transform: rotate(45deg);
+  vertical-align: middle;
+  margin: 0 .5rem .05rem;
+  box-shadow: 0 0 5px rgba(192,57,43,.5);
+}
+
+@media(max-width:520px) {
+  .rolls-grid { grid-template-columns: 1fr 1fr; }
+  .abilities-grid { grid-template-columns: 1fr; }
+  .ability.full { grid-column: 1; }
+  .evo-track { flex-direction: column; gap: .1rem; }
+  .evo-arrow { display: none; }
 }
 </style>
 </head>
 <body>
 
-<div class="scene">
-  <div class="sky"></div>
-  <div class="sky-glow"></div>
+<!-- ═══════ SCENE ═══════ -->
+<div id="scene">
+  <div id="sky"></div>
+  <div id="horizon-glow"></div>
 
-  <!-- city skyline SVG -->
-  <svg class="city-svg" viewBox="0 0 1400 280" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
+  <!-- PARTICLE CANVAS — floating ash -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- CITY — overgrown ruins far away -->
+  <svg id="city" viewBox="0 0 1600 340" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#2d0d18" stop-opacity=".5"/>
-        <stop offset="100%" stop-color="#0a0c10" stop-opacity=".9"/>
+      <linearGradient id="cityFade" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#200810" stop-opacity=".6"/>
+        <stop offset="100%" stop-color="#04020a" stop-opacity=".95"/>
       </linearGradient>
+      <filter id="cityBlur">
+        <feGaussianBlur stdDeviation="1.2"/>
+      </filter>
     </defs>
-    <rect width="1400" height="280" fill="url(#cg)"/>
-    <rect x="30"   y="120" width="45"  height="160" fill="#151018" opacity=".9"/>
-    <rect x="75"   y="160" width="30"  height="120" fill="#121018" opacity=".8"/>
-    <rect x="105"  y="90"  width="55"  height="190" fill="#161015" opacity=".95"/>
-    <rect x="160"  y="140" width="40"  height="140" fill="#130e14" opacity=".85"/>
-    <rect x="200"  y="70"  width="70"  height="210" fill="#181215" opacity=".95"/>
-    <rect x="228"  y="30"  width="3"   height="40"  fill="#201418" opacity=".7"/>
-    <rect x="250"  y="100" width="40"  height="180" fill="#141015" opacity=".8"/>
-    <rect x="290"  y="130" width="50"  height="150" fill="#151015" opacity=".85"/>
-    <rect x="340"  y="55"  width="80"  height="225" fill="#1a1218" opacity=".95"/>
-    <rect x="420"  y="110" width="35"  height="170" fill="#120e12" opacity=".8"/>
-    <rect x="455"  y="80"  width="60"  height="200" fill="#161215" opacity=".9"/>
-    <rect x="515"  y="140" width="45"  height="140" fill="#131015" opacity=".75"/>
-    <rect x="560"  y="60"  width="90"  height="220" fill="#1c1218" opacity=".95"/>
-    <rect x="592"  y="45"  width="22"  height="15"  fill="#181015" opacity=".7"/>
-    <rect x="650"  y="100" width="55"  height="180" fill="#141215" opacity=".85"/>
-    <rect x="705"  y="130" width="40"  height="150" fill="#131015" opacity=".8"/>
-    <rect x="745"  y="75"  width="70"  height="205" fill="#181218" opacity=".9"/>
-    <rect x="815"  y="115" width="50"  height="165" fill="#141015" opacity=".85"/>
-    <rect x="865"  y="50"  width="85"  height="230" fill="#1c1216" opacity=".95"/>
-    <rect x="950"  y="130" width="40"  height="150" fill="#131015" opacity=".75"/>
-    <rect x="990"  y="85"  width="65"  height="195" fill="#161215" opacity=".9"/>
-    <rect x="1055" y="145" width="45"  height="135" fill="#141018" opacity=".8"/>
-    <rect x="1100" y="65"  width="75"  height="215" fill="#1a1218" opacity=".95"/>
-    <rect x="1175" y="120" width="50"  height="160" fill="#141215" opacity=".85"/>
-    <rect x="1225" y="90"  width="60"  height="190" fill="#161018" opacity=".9"/>
-    <rect x="1285" y="135" width="45"  height="145" fill="#131015" opacity=".8"/>
-    <rect x="1330" y="70"  width="70"  height="210" fill="#181215" opacity=".9"/>
-    <!-- window lights -->
-    <rect x="115" y="110" width="4" height="3" fill="#c87a30" opacity=".22"/>
-    <rect x="212" y="85"  width="5" height="3" fill="#d4943a" opacity=".2"/>
-    <rect x="355" y="75"  width="5" height="3" fill="#d4943a" opacity=".22"/>
-    <rect x="575" y="80"  width="5" height="3" fill="#d4943a" opacity=".2"/>
-    <rect x="875" y="68"  width="5" height="3" fill="#d4943a" opacity=".22"/>
-    <rect x="1110" y="82" width="5" height="3" fill="#d4943a" opacity=".2"/>
-    <!-- vines on buildings -->
-    <path d="M200,280 Q195,240 202,200 Q208,168 198,130 Q192,105 200,70" fill="none" stroke="#2e4a1a" stroke-width="3" opacity=".55" stroke-linecap="round"/>
-    <ellipse cx="197" cy="198" rx="9" ry="5" fill="#2e4a1a" opacity=".5" transform="rotate(-22 197 198)"/>
-    <ellipse cx="199" cy="240" rx="11" ry="5.5" fill="#3d6128" opacity=".45" transform="rotate(12 199 240)"/>
-    <path d="M560,280 Q558,245 565,210 Q572,180 560,148" fill="none" stroke="#2e4a1a" stroke-width="3" opacity=".5" stroke-linecap="round"/>
-    <ellipse cx="562" cy="208" rx="10" ry="5" fill="#3d6128" opacity=".45" transform="rotate(18 562 208)"/>
-    <path d="M865,280 Q862,242 870,205 Q877,172 864,135 Q857,108 865,72" fill="none" stroke="#2e4a1a" stroke-width="3" opacity=".55" stroke-linecap="round"/>
-    <ellipse cx="866" cy="202" rx="11" ry="5.5" fill="#2e4a1a" opacity=".5" transform="rotate(-14 866 202)"/>
-    <path d="M1100,280 Q1098,248 1107,215 Q1114,188 1102,158" fill="none" stroke="#3d6128" stroke-width="2.5" opacity=".45" stroke-linecap="round"/>
-    <ellipse cx="1104" cy="212" rx="9" ry="4.5" fill="#2e4a1a" opacity=".42" transform="rotate(22 1104 212)"/>
-    <!-- street growth from bottom -->
-    <path d="M0,280 Q50,255 80,235 Q110,215 90,185 Q74,160 100,140" fill="none" stroke="#2e4a1a" stroke-width="4" opacity=".45" stroke-linecap="round"/>
-    <ellipse cx="91" cy="183" rx="12" ry="6" fill="#2e4a1a" opacity=".45" transform="rotate(-28 91 183)"/>
-    <path d="M700,280 Q730,262 748,242 Q765,224 751,200" fill="none" stroke="#3d6128" stroke-width="3" opacity=".4" stroke-linecap="round"/>
-    <ellipse cx="749" cy="240" rx="10" ry="5" fill="#2e4a1a" opacity=".4" transform="rotate(-16 749 240)"/>
-    <path d="M1350,280 Q1372,260 1388,242 Q1400,225 1390,202" fill="none" stroke="#2e4a1a" stroke-width="3" opacity=".38" stroke-linecap="round"/>
+
+    <!-- far background buildings — blurry, deep -->
+    <g filter="url(#cityBlur)" opacity=".45">
+      <rect x="0"    y="160" width="55"  height="180" fill="#1a0c16"/>
+      <rect x="55"   y="190" width="40"  height="150" fill="#160c14"/>
+      <rect x="95"   y="130" width="70"  height="210" fill="#1e0e18"/>
+      <rect x="165"  y="170" width="45"  height="170" fill="#180c14"/>
+      <rect x="210"  y="100" width="90"  height="240" fill="#200e1a"/>
+      <rect x="300"  y="155" width="50"  height="185" fill="#180c16"/>
+      <rect x="350"  y="80"  width="110" height="260" fill="#220f1c"/>
+      <rect x="460"  y="140" width="60"  height="200" fill="#1a0c16"/>
+      <rect x="520"  y="110" width="80"  height="230" fill="#1e0e18"/>
+      <rect x="600"  y="165" width="55"  height="175" fill="#160c14"/>
+      <rect x="655"  y="75"  width="120" height="265" fill="#240f1e"/>
+      <rect x="775"  y="145" width="65"  height="195" fill="#1c0e16"/>
+      <rect x="840"  y="95"  width="100" height="245" fill="#200e1a"/>
+      <rect x="940"  y="155" width="55"  height="185" fill="#180c14"/>
+      <rect x="995"  y="105" width="85"  height="235" fill="#1e0e18"/>
+      <rect x="1080" y="170" width="50"  height="170" fill="#160c12"/>
+      <rect x="1130" y="80"  width="110" height="260" fill="#220f1a"/>
+      <rect x="1240" y="150" width="60"  height="190" fill="#1a0c16"/>
+      <rect x="1300" y="115" width="80"  height="225" fill="#1e0e18"/>
+      <rect x="1380" y="160" width="55"  height="180" fill="#180c14"/>
+      <rect x="1435" y="85"  width="90"  height="255" fill="#200e1a"/>
+      <rect x="1525" y="140" width="75"  height="200" fill="#1c0c16"/>
+    </g>
+
+    <!-- mid buildings — more detail -->
+    <g opacity=".75">
+      <!-- damaged/broken silhouettes -->
+      <polygon points="120,340 120,140 140,140 145,120 160,125 160,90 175,90 175,70 200,70 200,90 215,90 215,115 230,110 230,140 240,140 240,340" fill="#120a10"/>
+      <!-- jagged top — broken floor -->
+      <polygon points="240,140 240,100 252,105 255,88 268,92 270,75 285,78 285,65 300,65 300,80 314,76 318,95 325,90 330,110 340,340 240,340" fill="#0e080e"/>
+      <polygon points="420,340 420,135 435,130 438,110 452,115 455,95 468,98 472,80 488,78 488,98 502,95 506,115 520,110 525,135 535,340" fill="#100a10"/>
+      <polygon points="600,340 600,115 618,118 620,95 638,100 640,78 658,82 660,60 680,60 682,82 698,78 700,100 718,95 720,118 730,115 730,340" fill="#120a12"/>
+      <!-- antenna -->
+      <rect x="665" y="35" width="2" height="25" fill="#0e0810" opacity=".8"/>
+      <polygon points="800,340 800,155 812,152 815,130 830,135 832,115 848,118 850,98 865,96 865,118 880,115 882,135 898,130 900,152 912,155 912,340" fill="#100a10"/>
+      <polygon points="980,340 980,120 995,125 998,100 1015,105 1018,82 1035,85 1038,65 1055,62 1055,85 1070,82 1073,105 1090,100 1092,125 1105,120 1105,340" fill="#120a12"/>
+      <polygon points="1180,340 1180,140 1195,135 1198,115 1212,120 1215,98 1230,102 1232,82 1248,80 1250,102 1265,98 1268,120 1282,115 1285,135 1295,140 1295,340" fill="#100a10"/>
+      <polygon points="1380,340 1380,108 1398,112 1400,88 1420,92 1422,70 1440,75 1442,55 1462,52 1464,75 1480,70 1482,92 1500,88 1502,112 1518,108 1518,340" fill="#120a12"/>
+    </g>
+
+    <!-- window lights — warm amber, few and far -->
+    <g opacity=".3">
+      <rect x="168" y="95"  width="5" height="3" fill="#c87230" rx="1"/>
+      <rect x="185" y="112" width="4" height="3" fill="#d4823a" rx="1"/>
+      <rect x="265" y="82"  width="5" height="3" fill="#c47028" rx="1"/>
+      <rect x="450" y="100" width="4" height="3" fill="#d4823a" rx="1"/>
+      <rect x="660" y="65"  width="6" height="3" fill="#c87230" rx="1"/>
+      <rect x="676" y="82"  width="4" height="3" fill="#d4823a" rx="1"/>
+      <rect x="852" y="104" width="5" height="3" fill="#c47028" rx="1"/>
+      <rect x="1040" y="70" width="5" height="3" fill="#c87230" rx="1"/>
+      <rect x="1235" y="88" width="4" height="3" fill="#d4823a" rx="1"/>
+      <rect x="1445" y="60" width="6" height="3" fill="#c87230" rx="1"/>
+    </g>
+
+    <!-- VINES — overgrown on buildings -->
+    <!-- left cluster -->
+    <path d="M200,340 Q196,298 204,258 Q212,222 200,180 Q190,148 200,105" fill="none" stroke="#2e4a1a" stroke-width="3.5" opacity=".7" stroke-linecap="round"/>
+    <path d="M200,258 Q184,250 174,235 Q165,220 172,208" fill="none" stroke="#2e4a1a" stroke-width="2" opacity=".55" stroke-linecap="round"/>
+    <ellipse cx="195" cy="255" rx="12" ry="6" fill="#2e4a1a" opacity=".65" transform="rotate(-20 195 255)"/>
+    <ellipse cx="198" cy="298" rx="14" ry="7" fill="#3d6128" opacity=".6" transform="rotate(14 198 298)"/>
+    <ellipse cx="175" cy="230" rx="10" ry="5" fill="#2e4a1a" opacity=".55" transform="rotate(8 175 230)"/>
+
+    <!-- mid cluster -->
+    <path d="M660,340 Q657,302 666,264 Q674,232 662,195 Q652,165 660,128" fill="none" stroke="#3d6128" stroke-width="3" opacity=".65" stroke-linecap="round"/>
+    <path d="M666,264 Q652,256 645,242" fill="none" stroke="#2e4a1a" stroke-width="1.8" opacity=".5" stroke-linecap="round"/>
+    <ellipse cx="662" cy="260" rx="11" ry="5.5" fill="#3d6128" opacity=".62" transform="rotate(-16 662 260)"/>
+    <ellipse cx="660" cy="305" rx="13" ry="6.5" fill="#2e4a1a" opacity=".58" transform="rotate(10 660 305)"/>
+
+    <!-- right cluster -->
+    <path d="M1060,340 Q1056,296 1065,255 Q1074,218 1062,178 Q1052,148 1060,108" fill="none" stroke="#2e4a1a" stroke-width="3.2" opacity=".68" stroke-linecap="round"/>
+    <path d="M1065,255 Q1050,245 1042,228" fill="none" stroke="#3d6128" stroke-width="1.8" opacity=".52" stroke-linecap="round"/>
+    <ellipse cx="1062" cy="252" rx="12" ry="6" fill="#2e4a1a" opacity=".64" transform="rotate(-24 1062 252)"/>
+    <ellipse cx="1058" cy="295" rx="14" ry="7" fill="#3d6128" opacity=".56" transform="rotate(18 1058 295)"/>
+
+    <!-- far right -->
+    <path d="M1460,340 Q1456,305 1464,272 Q1472,242 1460,210" fill="none" stroke="#2e4a1a" stroke-width="2.8" opacity=".58" stroke-linecap="round"/>
+    <ellipse cx="1461" cy="270" rx="10" ry="5" fill="#3d6128" opacity=".55" transform="rotate(-12 1461 270)"/>
+    <ellipse cx="1459" cy="308" rx="12" ry="6" fill="#2e4a1a" opacity=".5" transform="rotate(8 1459 308)"/>
+
+    <!-- ground foliage -->
+    <path d="M0,340 Q30,318 60,298 Q90,280 80,255 Q68,234 88,215" fill="none" stroke="#2e4a1a" stroke-width="4" opacity=".55" stroke-linecap="round"/>
+    <ellipse cx="78" cy="252" rx="13" ry="6.5" fill="#2e4a1a" opacity=".5" transform="rotate(-30 78 252)"/>
+    <path d="M350,340 Q375,320 388,302 Q400,285 392,268" fill="none" stroke="#3d6128" stroke-width="3" opacity=".45" stroke-linecap="round"/>
+    <ellipse cx="390" cy="300" rx="10" ry="5" fill="#2e4a1a" opacity=".45" transform="rotate(-18 390 300)"/>
+    <path d="M870,340 Q892,322 905,305 Q918,288 908,272" fill="none" stroke="#2e4a1a" stroke-width="3.2" opacity=".5" stroke-linecap="round"/>
+    <ellipse cx="906" cy="303" rx="11" ry="5.5" fill="#3d6128" opacity=".48" transform="rotate(-22 906 303)"/>
+    <path d="M1250,340 Q1268,325 1278,308 Q1290,292 1280,276" fill="none" stroke="#2e4a1a" stroke-width="2.8" opacity=".45" stroke-linecap="round"/>
+    <path d="M1560,340 Q1575,324 1582,308 Q1590,292 1582,276" fill="none" stroke="#3d6128" stroke-width="2.5" opacity=".42" stroke-linecap="round"/>
+
+    <rect width="1600" height="340" fill="url(#cityFade)"/>
   </svg>
 
-  <div class="ground-fog"></div>
+  <div id="fog"></div>
 
-  <!-- broken wall overlay -->
-  <svg class="wall-svg" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <!-- WALL SVG — broken concrete framing view like a window into the ruin -->
+  <svg id="wall" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <linearGradient id="wL" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#0c0c0a" stop-opacity="1"/><stop offset="100%" stop-color="#0c0c0a" stop-opacity="0"/></linearGradient>
-      <linearGradient id="wR" x1="1" y1="0" x2="0" y2="0"><stop offset="0%" stop-color="#0a0a0c" stop-opacity="1"/><stop offset="100%" stop-color="#0a0a0c" stop-opacity="0"/></linearGradient>
-      <linearGradient id="wT" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#080a0c" stop-opacity="1"/><stop offset="100%" stop-color="#080a0c" stop-opacity="0"/></linearGradient>
-      <linearGradient id="wB" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#040608" stop-opacity="1"/><stop offset="100%" stop-color="#040608" stop-opacity="0"/></linearGradient>
+      <!-- concrete texture gradient -->
+      <linearGradient id="concreteL" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#0c0a08" stop-opacity="1"/>
+        <stop offset="85%" stop-color="#0c0a08" stop-opacity=".92"/>
+        <stop offset="100%" stop-color="#0a0808" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="concreteR" x1="1" y1="0" x2="0" y2="0">
+        <stop offset="0%" stop-color="#0a0808" stop-opacity="1"/>
+        <stop offset="85%" stop-color="#0a0808" stop-opacity=".92"/>
+        <stop offset="100%" stop-color="#0a0808" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="concreteT" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#06060a" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#06060a" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="concreteB" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0%" stop-color="#02020a" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#02020a" stop-opacity="0"/>
+      </linearGradient>
+      <filter id="roughen">
+        <feTurbulence type="turbulence" baseFrequency=".65" numOctaves="3" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
     </defs>
-    <!-- edge vignette -->
-    <rect x="0"    y="0"   width="200" height="900" fill="url(#wL)"/>
-    <rect x="1200" y="0"   width="200" height="900" fill="url(#wR)"/>
-    <rect x="0"    y="0"   width="1400" height="130" fill="url(#wT)"/>
-    <rect x="0"    y="770" width="1400" height="130" fill="url(#wB)"/>
-    <!-- left broken wall chunk -->
-    <polygon points="0,0 250,0 210,65 178,42 145,88 112,52 78,95 48,62 0,85" fill="#1a1816" opacity=".96"/>
-    <polygon points="0,0 0,220 42,195 32,148 64,125 48,82 78,95 48,62 0,85" fill="#181614" opacity=".92"/>
-    <!-- cracks -->
-    <path d="M210,65 L194,128 L206,192 L184,255" fill="none" stroke="#080808" stroke-width="2.5" opacity=".85"/>
-    <path d="M145,88 L134,148 L152,200" fill="none" stroke="#0a0a0a" stroke-width="1.8" opacity=".75"/>
-    <!-- rebar -->
-    <line x1="172" y1="44" x2="164" y2="160" stroke="#3a3530" stroke-width="2.5" opacity=".75"/>
-    <line x1="156" y1="58" x2="149" y2="148" stroke="#3a3530" stroke-width="1.8" opacity=".65"/>
-    <!-- vine through crack -->
-    <path d="M158,88 Q150,128 158,162 Q165,188 153,225" fill="none" stroke="#2e4a1a" stroke-width="2.8" opacity=".75" stroke-linecap="round"/>
-    <path d="M158,162 Q146,158 140,148" fill="none" stroke="#3d6128" stroke-width="1.5" opacity=".6" stroke-linecap="round"/>
-    <ellipse cx="155" cy="160" rx="8" ry="4.5" fill="#2e4a1a" opacity=".72" transform="rotate(-22 155 160)"/>
-    <ellipse cx="152" cy="198" rx="9" ry="5" fill="#3d6128" opacity=".65" transform="rotate(16 152 198)"/>
-    <ellipse cx="152" cy="222" rx="7" ry="4" fill="#2e4a1a" opacity=".55" transform="rotate(-8 152 222)"/>
-    <!-- concrete particles -->
-    <circle cx="198" cy="78" r="2.5" fill="#3a3530" opacity=".55"/>
-    <circle cx="182" cy="98" r="1.8" fill="#3a3530" opacity=".45"/>
-    <circle cx="215" cy="58" r="1.2" fill="#3a3530" opacity=".38"/>
-    <circle cx="168" cy="112" r="2" fill="#2e2c2a" opacity=".5"/>
-    <!-- right broken wall chunk -->
-    <polygon points="1400,0 1148,0 1192,58 1224,36 1258,75 1292,50 1325,88 1358,64 1400,78" fill="#181816" opacity=".96"/>
-    <polygon points="1400,0 1400,210 1358,182 1370,142 1338,120 1356,80 1325,88 1358,64 1400,78" fill="#161614" opacity=".92"/>
-    <path d="M1192,58 L1208,120 L1196,182 L1215,242" fill="none" stroke="#0a0a0a" stroke-width="2.5" opacity=".85"/>
-    <line x1="1228" y1="38" x2="1238" y2="152" stroke="#3a3530" stroke-width="2.5" opacity=".75"/>
-    <line x1="1244" y1="52" x2="1252" y2="140" stroke="#3a3530" stroke-width="1.8" opacity=".65"/>
-    <path d="M1242,72 Q1250,118 1244,155 Q1238,182 1250,218" fill="none" stroke="#2e4a1a" stroke-width="2.8" opacity=".7" stroke-linecap="round"/>
-    <ellipse cx="1245" cy="153" rx="8" ry="4.5" fill="#2e4a1a" opacity=".68" transform="rotate(24 1245 153)"/>
-    <ellipse cx="1248" cy="196" rx="9" ry="5" fill="#3d6128" opacity=".62" transform="rotate(-14 1248 196)"/>
-    <circle cx="1200" cy="72" r="2.5" fill="#3a3530" opacity=".55"/>
-    <circle cx="1218" cy="95" r="1.8" fill="#3a3530" opacity=".45"/>
-    <!-- top ceiling chunk -->
-    <polygon points="380,0 640,0 608,54 576,32 542,68 508,42 474,72 442,40 410,62" fill="#161614" opacity=".92"/>
-    <path d="M608,54 L594,124 L608,178" fill="none" stroke="#0a0a0a" stroke-width="1.8" opacity=".75"/>
-    <!-- hanging vines from ceiling cracks -->
-    <path d="M542,68 Q548,105 540,138 Q532,168 542,198" fill="none" stroke="#2e4a1a" stroke-width="2.2" opacity=".65" stroke-linecap="round"/>
-    <ellipse cx="540" cy="136" rx="7" ry="4" fill="#2e4a1a" opacity=".6" transform="rotate(-12 540 136)"/>
-    <path d="M1060,0 Q1056,45 1064,78 Q1072,105 1060,138" fill="none" stroke="#3d6128" stroke-width="2" opacity=".55" stroke-linecap="round"/>
-    <ellipse cx="1062" cy="76" rx="6" ry="3.5" fill="#2e4a1a" opacity=".55" transform="rotate(18 1062 76)"/>
-    <ellipse cx="1060" cy="115" rx="7" ry="4" fill="#3d6128" opacity=".48" transform="rotate(-8 1060 115)"/>
-    <!-- floor rubble bottom -->
-    <polygon points="0,900 0,792 58,815 88,782 128,824 168,795 200,835 232,802 264,842 288,820 312,900" fill="#181614" opacity=".96"/>
-    <polygon points="1400,900 1400,798 1340,820 1308,788 1268,826 1238,798 1208,838 1182,808 1158,845 1136,822 1112,900" fill="#161614" opacity=".96"/>
-    <path d="M58,815 Q52,855 60,886" fill="none" stroke="#2e4a1a" stroke-width="2.2" opacity=".65" stroke-linecap="round"/>
-    <ellipse cx="59" cy="852" rx="7" ry="4" fill="#2e4a1a" opacity=".6" transform="rotate(10 59 852)"/>
-    <path d="M200,835 Q194,868 202,896" fill="none" stroke="#3d6128" stroke-width="1.8" opacity=".55" stroke-linecap="round"/>
-    <ellipse cx="201" cy="866" rx="6" ry="3.5" fill="#3d6128" opacity=".5" transform="rotate(-6 201 866)"/>
+
+    <!-- ═══ LEFT WALL SLAB — heavy jagged concrete ═══ -->
+    <!-- main body -->
+    <polygon points="
+      0,0  310,0
+      285,38  260,18  234,62
+      218,42  196,85
+      178,55  158,104
+      138,70  115,122
+      96,88   72,145
+      52,108  28,168
+      0,140
+    " fill="#181412" opacity=".97"/>
+
+    <!-- depth/thickness of the break — inner darker layer -->
+    <polygon points="
+      0,0  0,140
+      28,168  52,108  72,145
+      96,88   115,122
+      138,70  158,104
+      178,55  196,85
+      218,42  234,62
+      260,18  285,38
+      310,0
+    " fill="#0e0c0a" opacity=".6"/>
+
+    <!-- concrete block lines — horizontal mortar joints -->
+    <line x1="0"   y1="45"  x2="165" y2="45"  stroke="#0a0808" stroke-width="2" opacity=".6"/>
+    <line x1="0"   y1="92"  x2="120" y2="92"  stroke="#0a0808" stroke-width="1.5" opacity=".55"/>
+    <line x1="0"   y1="138" x2="70"  y2="138" stroke="#0a0808" stroke-width="1.5" opacity=".5"/>
+    <line x1="0"   y1="30"  x2="260" y2="30"  stroke="#0a0808" stroke-width="1.5" opacity=".45"/>
+    <!-- vertical joints -->
+    <line x1="85"  y1="0"   x2="72"  y2="145" stroke="#0a0808" stroke-width="1.2" opacity=".45"/>
+    <line x1="175" y1="0"   x2="155" y2="105" stroke="#0a0808" stroke-width="1.2" opacity=".4"/>
+    <line x1="255" y1="0"   x2="235" y2="60"  stroke="#0a0808" stroke-width="1" opacity=".38"/>
+
+    <!-- major cracks — radiating from break edge -->
+    <path d="M218,42 L198,110 L210,188 L195,268 L205,345" fill="none" stroke="#080806" stroke-width="3" opacity=".9" stroke-linecap="round"/>
+    <path d="M218,42 L230,85 L218,140 L228,195" fill="none" stroke="#080806" stroke-width="2" opacity=".7"/>
+    <path d="M158,104 L145,168 L160,238 L148,305" fill="none" stroke="#080806" stroke-width="2.5" opacity=".85" stroke-linecap="round"/>
+    <path d="M158,104 L170,152 L158,208" fill="none" stroke="#080806" stroke-width="1.5" opacity=".6"/>
+    <path d="M96,88 L84,148 L96,208 L82,278 L94,348" fill="none" stroke="#080806" stroke-width="2" opacity=".8" stroke-linecap="round"/>
+    <!-- hairline cracks -->
+    <path d="M196,85 L188,120 L200,165" fill="none" stroke="#080806" stroke-width="1" opacity=".55"/>
+    <path d="M115,122 L108,158 L118,195" fill="none" stroke="#080806" stroke-width="1" opacity=".5"/>
+
+    <!-- rebar — exposed steel -->
+    <line x1="195" y1="42"  x2="185" y2="195" stroke="#3a3228" stroke-width="3"   opacity=".8"/>
+    <line x1="180" y1="30"  x2="172" y2="165" stroke="#3a3228" stroke-width="2"   opacity=".65"/>
+    <line x1="162" y1="58"  x2="154" y2="185" stroke="#3a3228" stroke-width="2.5" opacity=".72"/>
+    <line x1="148" y1="48"  x2="142" y2="165" stroke="#3a3228" stroke-width="1.5" opacity=".6"/>
+    <line x1="112" y1="88"  x2="105" y2="200" stroke="#3a3228" stroke-width="2"   opacity=".68"/>
+    <!-- rebar bends -->
+    <path d="M185,195 Q188,220 178,245" fill="none" stroke="#3a3228" stroke-width="2.5" opacity=".7" stroke-linecap="round"/>
+    <path d="M154,185 Q158,210 148,238" fill="none" stroke="#3a3228" stroke-width="2"   opacity=".62" stroke-linecap="round"/>
+
+    <!-- vines growing through cracks -->
+    <path d="M175,55 Q165,95 172,140 Q178,178 165,225 Q154,268 162,315" fill="none" stroke="#2e4a1a" stroke-width="3.2" opacity=".82" stroke-linecap="round"/>
+    <!-- vine branch -->
+    <path d="M170,138 Q155,132 142,118 Q130,106 136,92" fill="none" stroke="#2e4a1a" stroke-width="1.8" opacity=".65" stroke-linecap="round"/>
+    <path d="M165,225 Q152,220 140,205" fill="none" stroke="#3d6128" stroke-width="1.5" opacity=".58" stroke-linecap="round"/>
+    <!-- leaves -->
+    <ellipse cx="168" cy="138" rx="11" ry="5.5" fill="#2e4a1a" opacity=".78" transform="rotate(-25 168 138)"/>
+    <ellipse cx="163" cy="180" rx="10" ry="5"   fill="#3d6128" opacity=".72" transform="rotate(18 163 180)"/>
+    <ellipse cx="160" cy="225" rx="12" ry="6"   fill="#2e4a1a" opacity=".68" transform="rotate(-12 160 225)"/>
+    <ellipse cx="158" cy="275" rx="10" ry="5"   fill="#3d6128" opacity=".62" transform="rotate(22 158 275)"/>
+    <ellipse cx="136" cy="116" rx="8"  ry="4"   fill="#2e4a1a" opacity=".6"  transform="rotate(-8 136 116)"/>
+    <ellipse cx="142" cy="207" rx="9"  ry="4.5" fill="#3d6128" opacity=".55" transform="rotate(10 142 207)"/>
+
+    <!-- second vine -->
+    <path d="M115,122 Q108,162 116,205 Q122,242 112,288" fill="none" stroke="#3d6128" stroke-width="2.5" opacity=".72" stroke-linecap="round"/>
+    <ellipse cx="114" cy="202" rx="9"  ry="4.5" fill="#2e4a1a" opacity=".65" transform="rotate(-18 114 202)"/>
+    <ellipse cx="112" cy="248" rx="10" ry="5"   fill="#3d6128" opacity=".58" transform="rotate(14 112 248)"/>
+
+    <!-- concrete dust / fallen chunks -->
+    <circle cx="225" cy="52"  r="3.5" fill="#2a2420" opacity=".65"/>
+    <circle cx="205" cy="68"  r="2.5" fill="#2a2420" opacity=".55"/>
+    <circle cx="190" cy="90"  r="2"   fill="#2a2420" opacity=".5"/>
+    <circle cx="168" cy="48"  r="3"   fill="#2a2420" opacity=".6"/>
+    <circle cx="148" cy="78"  r="1.8" fill="#2a2420" opacity=".48"/>
+    <circle cx="125" cy="105" r="2.5" fill="#2a2420" opacity=".52"/>
+    <circle cx="108" cy="68"  r="1.5" fill="#2a2420" opacity=".45"/>
+    <circle cx="82"  cy="112" r="2"   fill="#2a2420" opacity=".5"/>
+
+    <!-- fill solid from left edge -->
+    <rect x="0" y="0" width="32" height="900" fill="#0c0a08"/>
+    <!-- gradient fade inward -->
+    <rect x="0" y="0" width="320" height="900" fill="url(#concreteL)" opacity=".7"/>
+
+    <!-- ═══ RIGHT WALL SLAB ═══ -->
+    <polygon points="
+      1400,0  1090,0
+      1115,38 1140,18 1166,62
+      1182,42 1204,85
+      1222,55 1242,104
+      1262,70 1285,122
+      1304,88 1328,145
+      1348,108 1372,168
+      1400,140
+    " fill="#161412" opacity=".97"/>
+
+    <polygon points="
+      1400,0  1400,140
+      1372,168 1348,108 1328,145
+      1304,88  1285,122
+      1262,70  1242,104
+      1222,55  1204,85
+      1182,42  1166,62
+      1140,18  1115,38
+      1090,0
+    " fill="#100e0c" opacity=".6"/>
+
+    <!-- block lines right -->
+    <line x1="1400" y1="45"  x2="1235" y2="45"  stroke="#0a0808" stroke-width="2"   opacity=".6"/>
+    <line x1="1400" y1="92"  x2="1280" y2="92"  stroke="#0a0808" stroke-width="1.5" opacity=".55"/>
+    <line x1="1400" y1="138" x2="1330" y2="138" stroke="#0a0808" stroke-width="1.5" opacity=".5"/>
+    <line x1="1400" y1="30"  x2="1140" y2="30"  stroke="#0a0808" stroke-width="1.5" opacity=".45"/>
+    <line x1="1315" y1="0"   x2="1328" y2="145" stroke="#0a0808" stroke-width="1.2" opacity=".45"/>
+    <line x1="1225" y1="0"   x2="1245" y2="105" stroke="#0a0808" stroke-width="1.2" opacity=".4"/>
+
+    <!-- cracks right -->
+    <path d="M1182,42 L1202,110 L1190,188 L1205,268 L1195,345" fill="none" stroke="#080806" stroke-width="3"   opacity=".9" stroke-linecap="round"/>
+    <path d="M1242,104 L1255,168 L1240,238 L1252,305"          fill="none" stroke="#080806" stroke-width="2.5" opacity=".85" stroke-linecap="round"/>
+    <path d="M1304,88  L1316,148 L1304,208 L1318,278"          fill="none" stroke="#080806" stroke-width="2"   opacity=".8" stroke-linecap="round"/>
+
+    <!-- rebar right -->
+    <line x1="1205" y1="42"  x2="1215" y2="195" stroke="#3a3228" stroke-width="3"   opacity=".8"/>
+    <line x1="1220" y1="30"  x2="1228" y2="165" stroke="#3a3228" stroke-width="2"   opacity=".65"/>
+    <line x1="1238" y1="58"  x2="1246" y2="185" stroke="#3a3228" stroke-width="2.5" opacity=".72"/>
+    <line x1="1260" y1="48"  x2="1268" y2="165" stroke="#3a3228" stroke-width="1.5" opacity=".6"/>
+    <line x1="1288" y1="88"  x2="1295" y2="200" stroke="#3a3228" stroke-width="2"   opacity=".68"/>
+    <path d="M1215,195 Q1212,220 1222,245" fill="none" stroke="#3a3228" stroke-width="2.5" opacity=".7" stroke-linecap="round"/>
+    <path d="M1246,185 Q1242,210 1252,238" fill="none" stroke="#3a3228" stroke-width="2"   opacity=".62" stroke-linecap="round"/>
+
+    <!-- vines right -->
+    <path d="M1225,55 Q1235,95 1228,140 Q1222,178 1235,225 Q1246,268 1238,315" fill="none" stroke="#2e4a1a" stroke-width="3.2" opacity=".78" stroke-linecap="round"/>
+    <path d="M1230,138 Q1245,132 1258,118 Q1270,106 1264,92" fill="none" stroke="#2e4a1a" stroke-width="1.8" opacity=".62" stroke-linecap="round"/>
+    <path d="M1235,225 Q1248,220 1260,205" fill="none" stroke="#3d6128" stroke-width="1.5" opacity=".55" stroke-linecap="round"/>
+    <ellipse cx="1232" cy="138" rx="11" ry="5.5" fill="#2e4a1a" opacity=".75" transform="rotate(25 1232 138)"/>
+    <ellipse cx="1237" cy="180" rx="10" ry="5"   fill="#3d6128" opacity=".68" transform="rotate(-18 1237 180)"/>
+    <ellipse cx="1240" cy="225" rx="12" ry="6"   fill="#2e4a1a" opacity=".65" transform="rotate(12 1240 225)"/>
+    <ellipse cx="1242" cy="275" rx="10" ry="5"   fill="#3d6128" opacity=".6"  transform="rotate(-22 1242 275)"/>
+
+    <!-- dust right -->
+    <circle cx="1175" cy="52"  r="3.5" fill="#2a2420" opacity=".65"/>
+    <circle cx="1195" cy="68"  r="2.5" fill="#2a2420" opacity=".55"/>
+    <circle cx="1210" cy="90"  r="2"   fill="#2a2420" opacity=".5"/>
+    <circle cx="1232" cy="48"  r="3"   fill="#2a2420" opacity=".6"/>
+    <circle cx="1252" cy="78"  r="1.8" fill="#2a2420" opacity=".48"/>
+    <circle cx="1275" cy="105" r="2.5" fill="#2a2420" opacity=".52"/>
+
+    <rect x="1368" y="0" width="32" height="900" fill="#0c0a08"/>
+    <rect x="1080" y="0" width="320" height="900" fill="url(#concreteR)" opacity=".7"/>
+
+    <!-- ═══ CEILING SLAB — heavy broken top ═══ -->
+    <polygon points="
+      0,0 1400,0 1400,85
+      1355,72 1310,95 1265,68 1220,92 1175,60 1130,88
+      1085,55 1040,82 995,48  950,78
+      905,44  860,72  815,40  768,70
+      720,35  672,65  624,30  576,62
+      528,28  480,58  432,22  384,55
+      336,20  288,52  240,18  192,48
+      145,14  98,45   52,12   0,40
+    " fill="#141210" opacity=".98"/>
+
+    <!-- ceiling cracks -->
+    <path d="M720,35 Q715,88 725,145 Q732,195 720,252" fill="none" stroke="#080806" stroke-width="2.5" opacity=".85" stroke-linecap="round"/>
+    <path d="M528,28 Q522,75 530,125 Q538,168 525,215"  fill="none" stroke="#080806" stroke-width="2"   opacity=".8" stroke-linecap="round"/>
+    <path d="M912,44 Q908,92 918,145 Q925,192 914,238"  fill="none" stroke="#080806" stroke-width="2"   opacity=".8" stroke-linecap="round"/>
+    <path d="M1130,88 Q1124,140 1132,198"               fill="none" stroke="#080806" stroke-width="1.8" opacity=".75" stroke-linecap="round"/>
+    <path d="M288,52 Q282,98 290,148"                   fill="none" stroke="#080806" stroke-width="1.8" opacity=".75" stroke-linecap="round"/>
+
+    <!-- hanging vines from ceiling -->
+    <path d="M720,35 Q730,82 720,128 Q712,168 722,210 Q730,248 718,290" fill="none" stroke="#2e4a1a" stroke-width="2.8" opacity=".75" stroke-linecap="round"/>
+    <ellipse cx="720" cy="126" rx="10" ry="5"   fill="#2e4a1a" opacity=".7"  transform="rotate(-14 720 126)"/>
+    <ellipse cx="722" cy="175" rx="11" ry="5.5" fill="#3d6128" opacity=".62" transform="rotate(20 722 175)"/>
+    <ellipse cx="718" cy="225" rx="9"  ry="4.5" fill="#2e4a1a" opacity=".55" transform="rotate(-8 718 225)"/>
+
+    <path d="M528,28 Q538,72 528,115 Q520,155 530,195" fill="none" stroke="#3d6128" stroke-width="2.2" opacity=".65" stroke-linecap="round"/>
+    <ellipse cx="528" cy="112" rx="9"  ry="4.5" fill="#3d6128" opacity=".62" transform="rotate(18 528 112)"/>
+    <ellipse cx="530" cy="158" rx="10" ry="5"   fill="#2e4a1a" opacity=".55" transform="rotate(-12 530 158)"/>
+
+    <path d="M912,44 Q922,88 912,132 Q904,170 915,212" fill="none" stroke="#2e4a1a" stroke-width="2.5" opacity=".7" stroke-linecap="round"/>
+    <ellipse cx="912" cy="130" rx="10" ry="5"   fill="#2e4a1a" opacity=".65" transform="rotate(-22 912 130)"/>
+    <ellipse cx="914" cy="175" rx="9"  ry="4.5" fill="#3d6128" opacity=".58" transform="rotate(15 914 175)"/>
+
+    <path d="M1130,88 Q1140,128 1130,170 Q1122,205 1132,242" fill="none" stroke="#3d6128" stroke-width="2" opacity=".6" stroke-linecap="round"/>
+    <ellipse cx="1130" cy="168" rx="9" ry="4.5" fill="#2e4a1a" opacity=".58" transform="rotate(20 1130 168)"/>
+
+    <path d="M288,52 Q298,92 288,135 Q280,172 290,212" fill="none" stroke="#2e4a1a" stroke-width="2" opacity=".62" stroke-linecap="round"/>
+    <ellipse cx="288" cy="132" rx="8" ry="4"   fill="#3d6128" opacity=".55" transform="rotate(-16 288 132)"/>
+
+    <!-- ceiling concrete fill + gradient -->
+    <rect x="0" y="0" width="1400" height="28" fill="#0e0c0a"/>
+    <rect x="0" y="0" width="1400" height="145" fill="url(#concreteT)" opacity=".75"/>
+
+    <!-- ═══ FLOOR RUBBLE ═══ -->
+    <polygon points="0,900 0,808 42,828 72,798 112,838 152,805 190,844 228,812 268,848 302,816 336,855 372,822 408,858 442,828 480,862 510,900" fill="#141210" opacity=".98"/>
+    <polygon points="1400,900 1400,808 1358,828 1328,798 1288,838 1248,805 1210,844 1172,812 1132,848 1098,816 1062,855 1028,822 992,858 958,828 920,862 890,900" fill="#141210" opacity=".98"/>
+
+    <!-- floor vines -->
+    <path d="M42,828 Q36,858 44,888" fill="none" stroke="#2e4a1a" stroke-width="2.2" opacity=".68" stroke-linecap="round"/>
+    <ellipse cx="43" cy="856" rx="8" ry="4" fill="#2e4a1a" opacity=".62" transform="rotate(10 43 856)"/>
+    <path d="M190,844 Q184,868 192,896" fill="none" stroke="#3d6128" stroke-width="2" opacity=".62" stroke-linecap="round"/>
+    <ellipse cx="191" cy="866" rx="7" ry="3.5" fill="#3d6128" opacity=".55" transform="rotate(-8 191 866)"/>
+    <path d="M1358,828 Q1364,858 1356,888" fill="none" stroke="#2e4a1a" stroke-width="2.2" opacity=".65" stroke-linecap="round"/>
+    <ellipse cx="1357" cy="856" rx="8" ry="4" fill="#2e4a1a" opacity=".6" transform="rotate(-10 1357 856)"/>
+    <path d="M1210,844 Q1216,868 1208,896" fill="none" stroke="#3d6128" stroke-width="2" opacity=".58" stroke-linecap="round"/>
+
+    <!-- floor cracks -->
+    <path d="M72,798 L78,835 L70,870" fill="none" stroke="#080806" stroke-width="1.8" opacity=".7" stroke-linecap="round"/>
+    <path d="M152,805 L158,842 L150,878" fill="none" stroke="#080806" stroke-width="1.5" opacity=".65" stroke-linecap="round"/>
+
+    <rect x="0"    y="872" width="1400" height="28" fill="#0c0a08"/>
+    <rect x="0"    y="755" width="1400" height="145" fill="url(#concreteB)" opacity=".7"/>
   </svg>
 </div>
 
-<div class="content-wrap">
+<!-- ═══════ CONTENT ═══════ -->
+<div class="wrap">
+
   <div class="header-card">
-    <div class="header-smear"></div>
-    <div class="badge-row">
-      <div>
-        <div class="char-nickname">// Johnny Wellman //</div>
-        <div class="char-name">Meatball</div>
-        <div class="char-meta">DM Character &nbsp;·&nbsp; Archivist Network — Wanted</div>
-        <div class="char-meta tag">Embodiment EGG — Cellular Manipulation</div>
-        <div class="evo-track">
-          <span class="evo-step">Minor Regen</span><span class="evo-arrow">→</span>
-          <span class="evo-step">Regeneration</span><span class="evo-arrow">→</span>
-          <span class="evo-step">Morphing</span><span class="evo-arrow">→</span>
-          <span class="evo-step">Cell Manip.</span><span class="evo-arrow">→</span>
-          <span class="evo-step current">Cellular Manip.</span>
+    <div class="header-inner">
+      <div class="badge-row">
+        <div>
+          <div class="nickname">// Johnny Wellman //</div>
+          <div class="char-name">Meatball</div>
+          <div class="char-meta">DM Character &nbsp;·&nbsp; Archivist Network — Wanted</div>
+          <div class="char-meta tag">Embodiment EGG — Cellular Manipulation</div>
+          <div class="dm-badge">gm only</div>
+          <div class="evo-track">
+            <span class="evo-step done">Minor Regen</span><span class="evo-arrow">→</span>
+            <span class="evo-step done">Regeneration</span><span class="evo-arrow">→</span>
+            <span class="evo-step done">Morphing</span><span class="evo-arrow">→</span>
+            <span class="evo-step done">Cell Manip.</span><span class="evo-arrow">→</span>
+            <span class="evo-step current">Cellular Manip.</span>
+          </div>
         </div>
-      </div>
-      <div class="badge">
-        <div class="badge-label">Level</div>
-        <div class="badge-value">??</div>
+        <div class="badge">
+          <div class="badge-label">Level</div>
+          <div class="badge-value">??</div>
+        </div>
       </div>
     </div>
   </div>
@@ -421,6 +1015,126 @@ body{
   <div class="footer">
     dm character<span></span>post-collapse 2004<span></span>embodiment egg
   </div>
+
 </div>
+
+<script>
+// ═══════════════════════════════════════
+// PARTICLE SYSTEM — floating ash & embers
+// ═══════════════════════════════════════
+const canvas = document.getElementById('particle-canvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', () => { resize(); initParticles(); });
+
+class Ash {
+  constructor() { this.reset(true); }
+  reset(initial) {
+    this.x  = Math.random() * W;
+    this.y  = initial ? Math.random() * H : H + 15;
+    this.r  = Math.random() * 1.8 + .4;
+    this.vx = (Math.random() - .5) * .4;
+    this.vy = -(Math.random() * .5 + .08);
+    this.wobble = Math.random() * Math.PI * 2;
+    this.wobbleSpeed = Math.random() * .025 + .008;
+    this.life = 0;
+    this.maxLife = Math.random() * 500 + 250;
+    // crimson, purple, or pale grey ash
+    const types = [
+      { h:5,   s:65, l:45 },  // ember red
+      { h:10,  s:55, l:35 },  // deep ember
+      { h:280, s:45, l:45 },  // purple
+      { h:0,   s:0,  l:55 },  // grey ash
+      { h:0,   s:0,  l:40 },  // dark ash
+    ];
+    const t = types[Math.floor(Math.random() * types.length)];
+    this.h = t.h; this.s = t.s; this.l = t.l;
+    this.isEmber = t.h < 20 && t.s > 50;
+  }
+  update() {
+    this.wobble += this.wobbleSpeed;
+    this.x += this.vx + Math.sin(this.wobble) * .35;
+    this.y += this.vy;
+    this.life++;
+    if (this.life > this.maxLife || this.y < -15) this.reset(false);
+  }
+  draw() {
+    const t = this.life / this.maxLife;
+    const a = t < .15 ? t / .15 : t > .78 ? (1 - t) / .22 : 1;
+    // ember glow
+    if (this.isEmber) {
+      const grd = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 4);
+      grd.addColorStop(0, `hsla(${this.h},${this.s}%,${this.l + 20}%,${a * .5})`);
+      grd.addColorStop(1, `hsla(${this.h},${this.s}%,${this.l}%,0)`);
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r * 4, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+    }
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${this.h},${this.s}%,${this.l}%,${a * (this.isEmber ? .8 : .35)})`;
+    ctx.fill();
+  }
+}
+
+// large slow drifting smoke puffs
+class Smoke {
+  constructor() { this.reset(true); }
+  reset(initial) {
+    this.x = Math.random() * W;
+    this.y = initial ? Math.random() * H : H + 80;
+    this.r = Math.random() * 50 + 25;
+    this.vx = (Math.random() - .5) * .15;
+    this.vy = -(Math.random() * .18 + .04);
+    this.life = 0;
+    this.maxLife = Math.random() * 900 + 500;
+    this.rot = Math.random() * Math.PI * 2;
+    this.rotSpeed = (Math.random() - .5) * .004;
+  }
+  update() {
+    this.x += this.vx + Math.sin(this.life * .006) * .2;
+    this.y += this.vy;
+    this.rot += this.rotSpeed;
+    this.life++;
+    if (this.life > this.maxLife || this.y < -100) this.reset(false);
+  }
+  draw() {
+    const t = this.life / this.maxLife;
+    const a = t < .25 ? t / .25 : t > .65 ? (1 - t) / .35 : 1;
+    const grd = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r);
+    grd.addColorStop(0, `rgba(40,20,35,${a * .06})`);
+    grd.addColorStop(.5, `rgba(30,15,28,${a * .04})`);
+    grd.addColorStop(1, `rgba(20,10,22,0)`);
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = grd;
+    ctx.fill();
+  }
+}
+
+let particles = [], smokes = [];
+
+function initParticles() {
+  const count = Math.floor((W * H) / 7500);
+  particles = Array.from({ length: count }, () => new Ash());
+  smokes    = Array.from({ length: 10 },   () => new Smoke());
+}
+initParticles();
+
+function frame() {
+  ctx.clearRect(0, 0, W, H);
+  smokes.forEach(s    => { s.update(); s.draw(); });
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(frame);
+}
+frame();
+</script>
 </body>
 </html>
