@@ -163,5 +163,11 @@
       ]
     }
   ],
-  "commands": []
+  "commands": [
+    {
+      "cmdId": "c17909872701218089",
+      "type": "removeItem",
+      "itemName": "Spear"
+    }
+  ]
 }
