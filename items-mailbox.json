@@ -168,6 +168,11 @@
       "cmdId": "c17909872701218089",
       "type": "removeItem",
       "itemName": "Spear"
+    },
+    {
+      "cmdId": "c17909872726434082",
+      "type": "removeItem",
+      "itemName": "Spear"
     }
   ]
 }
