@@ -107,6 +107,60 @@
           "notes": "Thrust the spear with an extended arm at a rapid pace causing the air pressure around the pike to act as a wider blade. At this speed the blade might not even hit the target and instead the wind will do the damage."
         }
       ]
+    },
+    {
+      "mailId": "m17909867550804259",
+      "name": "Spear",
+      "type": "Weapon",
+      "rarity": "Common",
+      "value": "",
+      "weight": "18",
+      "qty": 1,
+      "stackable": false,
+      "desc": "A normal pike that Meatball commissioned to be made by a blacksmith years ago. Used in such a way with Meatball's ability it can be considered a major threat but only in his hands.",
+      "notes": "",
+      "equippable": true,
+      "usable": false,
+      "consumable": false,
+      "uses": "",
+      "props": "Heavy, Reach, Two-Handed",
+      "weaponWt": "Heavy",
+      "twoHanded": true,
+      "ac": "",
+      "armorType": "Light",
+      "strReq": "",
+      "stealthDisadv": false,
+      "ammoDamage": "",
+      "ammoDmgType": "",
+      "effect": "",
+      "fx": {
+        "str": "",
+        "mnd": "",
+        "sol": "",
+        "def": ""
+      },
+      "conditions": [],
+      "customFields": [],
+      "actions": [
+        {
+          "name": "Thrust",
+          "damage": "1d10 + STR",
+          "dmgType": "Piercing",
+          "range": "5 ft",
+          "damage2": "",
+          "dmgType2": "",
+          "notes": "Thrust the pike into the target."
+        },
+        {
+          "name": "Accelerated Thrust",
+          "damage": "3d10 + STR",
+          "dmgType": "Piercing",
+          "range": "30ft",
+          "damage2": "",
+          "dmgType2": "",
+          "notes": "Thrust the spear with an extended arm at a rapid pace causing the air pressure around the pike to act as a wider blade. At this speed the blade might not even hit the target and instead the wind will do the damage."
+        }
+      ]
     }
   ],
   "commands": []
